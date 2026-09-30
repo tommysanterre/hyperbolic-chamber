@@ -3,9 +3,13 @@ name: Android build
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -42,12 +46,38 @@ jobs:
           umask 077
           export SNACKLOOP_KEYSTORE_PATH="$RUNNER_TEMP/snackloop-release.jks"
           printf '%s' "$SNACKLOOP_KEYSTORE_BASE64" | base64 --decode > "$SNACKLOOP_KEYSTORE_PATH"
+          version_name="0.2.${GITHUB_RUN_NUMBER}"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            version_name="${GITHUB_REF_NAME#v}"
+          fi
           gradle assembleRelease \
             -PsnackloopVersionCode="$((1000 + GITHUB_RUN_NUMBER))" \
-            -PsnackloopVersionName="0.2.${GITHUB_RUN_NUMBER}"
+            -PsnackloopVersionName="$version_name"
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify app/build/outputs/apk/release/app-release.apk
       - uses: actions/upload-artifact@v4
         if: github.event_name != 'pull_request' && success()
         with:
           name: SnackLoop-update
           path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: SnackLoop-update
+          path: release
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" release/app-release.apk \
+            --verify-tag \
+            --title "SnackLoop $GITHUB_REF_NAME" \
+            --generate-notes
