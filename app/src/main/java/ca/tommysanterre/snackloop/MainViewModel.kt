@@ -4,12 +4,14 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.LocalDate
+import java.time.Duration
 import java.time.ZoneId
+import java.time.ZonedDateTime
 
 data class UiState(
     val completions: List<Completion> = emptyList(),
@@ -19,16 +21,20 @@ data class UiState(
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val dao = SnackLoopDatabase.get(application).completionDao()
-
-    val state = dao.observeAll().map { history ->
-        val chronological = history.sortedWith(compareBy<Completion> { it.completedAt }.thenBy { it.id })
-        val currentIndex = chronological.size % exercises.size
-        val zone = ZoneId.systemDefault()
-        val today = LocalDate.now(zone)
-        val todayCount = chronological.count {
-            Instant.ofEpochMilli(it.completedAt).atZone(zone).toLocalDate() == today
+    private val localDate = flow {
+        while (true) {
+            val zone = ZoneId.systemDefault()
+            val now = ZonedDateTime.now(zone)
+            emit(now.toLocalDate())
+            val nextMidnight = now.toLocalDate().plusDays(1).atStartOfDay(zone)
+            delay(Duration.between(now, nextMidnight).toMillis().coerceAtLeast(1_000))
         }
-        UiState(history, currentIndex, todayCount / exercises.size)
+    }
+
+    val state = combine(dao.observeAll(), localDate) { history, today ->
+        val zone = ZoneId.systemDefault()
+        val rotation = rotationState(history, today, zone)
+        UiState(history, rotation.currentIndex, rotation.rotationsOnDate)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState())
 
     fun complete(amount: Int) {
