@@ -63,12 +63,26 @@ fun SnackLoopApp(vm: MainViewModel = viewModel()) {
         }
     ) { padding ->
         if (historyOpen) HistoryScreen(state, Modifier.padding(padding))
-        else ExerciseScreen(exercise, state.completions.isNotEmpty(), vm::complete, vm::undo, Modifier.padding(padding))
+        else ExerciseScreen(
+            exercise = exercise,
+            canUndo = state.completions.isNotEmpty() && !state.storageUnavailable,
+            storageUnavailable = state.storageUnavailable,
+            onComplete = vm::complete,
+            onUndo = vm::undo,
+            modifier = Modifier.padding(padding)
+        )
     }
 }
 
 @Composable
-private fun ExerciseScreen(exercise: Exercise, canUndo: Boolean, onComplete: (Int) -> Unit, onUndo: () -> Unit, modifier: Modifier = Modifier) {
+private fun ExerciseScreen(
+    exercise: Exercise,
+    canUndo: Boolean,
+    storageUnavailable: Boolean,
+    onComplete: (Int) -> Unit,
+    onUndo: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var amount by remember(exercise.id) { mutableStateOf("") }
     val instructionsScrollState = rememberScrollState()
     LaunchedEffect(exercise.id) { instructionsScrollState.scrollTo(0) }
@@ -86,12 +100,20 @@ private fun ExerciseScreen(exercise: Exercise, canUndo: Boolean, onComplete: (In
             value = amount,
             onValueChange = { amount = it.filter(Char::isDigit) },
             label = { Text(exercise.unit.inputLabel()) },
+            enabled = !storageUnavailable,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
+        if (storageUnavailable) {
+            Text(
+                "Your saved history couldn't be opened. SnackLoop will stay open, but recording is unavailable. Try restarting the app.",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
         Button(
             onClick = { amount.toIntOrNull()?.let { onComplete(it); amount = "" } },
-            enabled = (amount.toIntOrNull() ?: 0) > 0,
+            enabled = !storageUnavailable && (amount.toIntOrNull() ?: 0) > 0,
             modifier = Modifier.fillMaxWidth().height(56.dp)
         ) { Text("Complete") }
         TextButton(onClick = onUndo, enabled = canUndo, modifier = Modifier.align(Alignment.CenterHorizontally)) { Text("Undo last") }
