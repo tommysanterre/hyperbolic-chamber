@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun SnackLoopApp(vm: MainViewModel = viewModel()) {
     val state by vm.state.collectAsState()
     var historyOpen by remember { mutableStateOf(false) }
