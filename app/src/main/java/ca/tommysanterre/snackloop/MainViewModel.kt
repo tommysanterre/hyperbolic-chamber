@@ -21,6 +21,7 @@ data class UiState(
     val completions: List<Completion> = emptyList(),
     val currentIndex: Int = 0,
     val rotationsToday: Int = 0,
+    val completedRotations: Int = 0,
     val storageUnavailable: Boolean = false
 )
 
@@ -49,7 +50,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val state = combine(history, localDate, storageUnavailable) { history, today, unavailable ->
         val zone = ZoneId.systemDefault()
         val rotation = rotationState(history, today, zone)
-        UiState(history, rotation.currentIndex, rotation.rotationsOnDate, unavailable)
+        UiState(history, rotation.currentIndex, rotation.rotationsOnDate, rotation.completedRotations, unavailable)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState())
 
     fun complete(amount: Int) {

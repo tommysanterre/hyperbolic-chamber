@@ -1,4 +1,4 @@
-package ca.tommysanterre.snackloop
+﻿package ca.tommysanterre.snackloop
 
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
@@ -45,8 +45,8 @@ fun SnackLoopApp(vm: MainViewModel = viewModel()) {
             TopAppBar(
                 title = {
                     Text(
-                        if (historyOpen) "History  ·  ↻ ${state.rotationsToday} today"
-                        else "SnackLoop  ·  ↻ ${state.rotationsToday} today"
+                        if (historyOpen) "History  \u00B7  \u21BB ${state.rotationsToday} today"
+                        else "SnackLoop  \u00B7  \u21BB ${state.rotationsToday} today"
                     )
                 },
                 navigationIcon = {
@@ -65,6 +65,7 @@ fun SnackLoopApp(vm: MainViewModel = viewModel()) {
         if (historyOpen) HistoryScreen(state, Modifier.padding(padding))
         else ExerciseScreen(
             exercise = exercise,
+            superSaiyan = state.completedRotations > 1,
             canUndo = state.completions.isNotEmpty() && !state.storageUnavailable,
             storageUnavailable = state.storageUnavailable,
             onComplete = vm::complete,
@@ -77,6 +78,7 @@ fun SnackLoopApp(vm: MainViewModel = viewModel()) {
 @Composable
 private fun ExerciseScreen(
     exercise: Exercise,
+    superSaiyan: Boolean,
     canUndo: Boolean,
     storageUnavailable: Boolean,
     onComplete: (Int) -> Unit,
@@ -93,48 +95,53 @@ private fun ExerciseScreen(
     }
     val instructionsScrollState = rememberScrollState()
     LaunchedEffect(exercise.id) { instructionsScrollState.scrollTo(0) }
-    Column(modifier.fillMaxSize().verticalScroll(instructionsScrollState).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(modifier.fillMaxSize().padding(24.dp)) {
         Column(
-            Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            Modifier.fillMaxWidth().weight(1f).verticalScroll(instructionsScrollState),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(exercise.name, style = MaterialTheme.typography.displaySmall)
-            Text("Target  ${exercise.target}", style = MaterialTheme.typography.titleMedium)
-            MovementDiagram(exercise)
-            Text(exercise.description, style = MaterialTheme.typography.bodyLarge)
-        }
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(exercise.unit.inputLabel(), style = MaterialTheme.typography.titleMedium)
-            Text("Tap a number to record and move on", style = MaterialTheme.typography.bodyMedium)
-        }
-        amounts.chunked(4).forEach { row ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                row.forEach { amount ->
-                    FilledTonalButton(
-                        onClick = {
-                            if (!submitting && !storageUnavailable) {
-                                submitting = true
-                                onComplete(amount)
-                            }
-                        },
-                        enabled = !storageUnavailable && !submitting,
-                        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 12.dp),
-                        modifier = Modifier.weight(1f).heightIn(min = 52.dp).semantics {
-                            contentDescription = "Record $amount ${exercise.unit.historyLabel(amount)} and go to next exercise"
-                        }
-                    ) {
-                        Text(amount.toString(), style = MaterialTheme.typography.titleLarge)
-                    }
-                }
-                repeat(4 - row.size) { Spacer(Modifier.weight(1f)) }
+            Column(
+                Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                Text(exercise.name, style = MaterialTheme.typography.displaySmall)
+                Text("Target  ${exercise.target}", style = MaterialTheme.typography.titleMedium)
+                MovementDiagram(exercise, superSaiyan)
+                Text(exercise.description, style = MaterialTheme.typography.bodyLarge)
             }
-        }
-        if (storageUnavailable) {
-            Text(
-                "Your saved history couldn't be opened. SnackLoop will stay open, but recording is unavailable. Try restarting the app.",
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(exercise.unit.inputLabel(), style = MaterialTheme.typography.titleMedium)
+                Text("Tap a number to record and move on", style = MaterialTheme.typography.bodyMedium)
+            }
+            amounts.chunked(4).forEach { row ->
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    row.forEach { amount ->
+                        FilledTonalButton(
+                            onClick = {
+                                if (!submitting && !storageUnavailable) {
+                                    submitting = true
+                                    onComplete(amount)
+                                }
+                            },
+                            enabled = !storageUnavailable && !submitting,
+                            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 12.dp),
+                            modifier = Modifier.weight(1f).heightIn(min = 52.dp).semantics {
+                                contentDescription = "Record $amount ${exercise.unit.historyLabel(amount)} and go to next exercise"
+                            }
+                        ) {
+                            Text(amount.toString(), style = MaterialTheme.typography.titleLarge)
+                        }
+                    }
+                    repeat(4 - row.size) { Spacer(Modifier.weight(1f)) }
+                }
+            }
+            if (storageUnavailable) {
+                Text(
+                    "Your saved history couldn't be opened. SnackLoop will stay open, but recording is unavailable. Try restarting the app.",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
         TextButton(onClick = onUndo, enabled = canUndo, modifier = Modifier.align(Alignment.CenterHorizontally)) { Text("Undo last") }
     }

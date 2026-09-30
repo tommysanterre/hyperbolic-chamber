@@ -21,6 +21,7 @@ class RotationLogicTest {
         }
 
         assertEquals(1, state(history).rotationsOnDate)
+        assertEquals(1, state(history).completedRotations)
     }
 
     @Test
@@ -50,6 +51,22 @@ class RotationLogicTest {
         }
 
         assertEquals(2, state(history).rotationsOnDate)
+        assertEquals(2, state(history).completedRotations)
+    }
+
+    @Test
+    fun `completed rotations persist across days and undo removes the second loop`() {
+        val firstDay = exercises.mapIndexed { index, exercise ->
+            completion(exercise, index, today.minusDays(1))
+        }
+        val secondDay = exercises.mapIndexed { index, exercise ->
+            completion(exercise, index + exercises.size)
+        }
+
+        assertEquals(1, state(firstDay).completedRotations)
+        assertEquals(2, state(firstDay + secondDay).completedRotations)
+        assertEquals(1, state(firstDay + secondDay.dropLast(1)).completedRotations)
+        assertEquals(1, state(firstDay + secondDay).rotationsOnDate)
     }
 
     @Test
@@ -60,6 +77,7 @@ class RotationLogicTest {
         )
 
         assertEquals(0, state(incompleteSequence).rotationsOnDate)
+        assertEquals(0, state(incompleteSequence).completedRotations)
         assertEquals(0, state(incompleteSequence).currentIndex)
     }
 
@@ -71,6 +89,7 @@ class RotationLogicTest {
 
         assertEquals(exercises.lastIndex, afterUndo.currentIndex)
         assertEquals(0, afterUndo.rotationsOnDate)
+        assertEquals(0, afterUndo.completedRotations)
     }
 
     @Test
