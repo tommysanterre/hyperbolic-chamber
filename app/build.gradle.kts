@@ -1,9 +1,28 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
 }
+
+val localSigning = Properties().apply {
+    val propertiesFile = rootProject.file("signing/keystore.properties")
+    if (propertiesFile.exists()) propertiesFile.inputStream().use(::load)
+}
+val signingStoreFile = providers.environmentVariable("SNACKLOOP_KEYSTORE_PATH").orNull
+    ?: localSigning.getProperty("storeFile")
+val signingStorePassword = providers.environmentVariable("SNACKLOOP_STORE_PASSWORD").orNull
+    ?: localSigning.getProperty("storePassword")
+val signingKeyAlias = providers.environmentVariable("SNACKLOOP_KEY_ALIAS").orNull
+    ?: localSigning.getProperty("keyAlias")
+val signingKeyPassword = providers.environmentVariable("SNACKLOOP_KEY_PASSWORD").orNull
+    ?: localSigning.getProperty("keyPassword")
+val hasReleaseSigning = !signingStoreFile.isNullOrBlank() &&
+    !signingStorePassword.isNullOrBlank() &&
+    !signingKeyAlias.isNullOrBlank() &&
+    !signingKeyPassword.isNullOrBlank()
 
 kotlin {
     compilerOptions {
@@ -19,8 +38,25 @@ android {
         applicationId = "ca.tommysanterre.snackloop"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = providers.gradleProperty("snackloopVersionCode").orNull?.toInt() ?: 1000
+        versionName = providers.gradleProperty("snackloopVersionName").orNull ?: "0.2.0"
+    }
+
+    if (hasReleaseSigning) {
+        signingConfigs {
+            create("snackloopRelease") {
+                storeFile = file(signingStoreFile!!)
+                storePassword = signingStorePassword
+                keyAlias = signingKeyAlias
+                keyPassword = signingKeyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        getByName("release") {
+            if (hasReleaseSigning) signingConfig = signingConfigs.getByName("snackloopRelease")
+        }
     }
 
     compileOptions {
@@ -31,6 +67,15 @@ android {
     buildFeatures { compose = true }
     packaging { resources.excludes += "/META-INF/{AL2.0,LGPL2.1}" }
 }
+
+val verifyReleaseSigning = tasks.register("verifyReleaseSigning") {
+    doLast {
+        check(hasReleaseSigning) {
+            "Release signing is missing. Configure signing/keystore.properties or SNACKLOOP signing environment variables."
+        }
+    }
+}
+tasks.matching { it.name == "assembleRelease" }.configureEach { dependsOn(verifyReleaseSigning) }
 
 dependencies {
     implementation(libs.androidx.core.ktx)

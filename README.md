@@ -14,12 +14,27 @@ SnackLoop is a tiny offline-first Android app for moving through a continuous ro
 
 Complete the movement shown, record the amount, and SnackLoop advances to the next movement. The queue persists across days. There is no skip action or daily limit.
 
-## Build
+## Installable updates
 
-With Gradle 8.13 installed, run:
+Use the **SnackLoop-update** artifact from the Android build workflow for installs and updates. It contains a signed release APK. Every workflow run on `main` uses the same signing key and a higher Android `versionCode`, so a new APK can install over the previous release while keeping saved history. The workflow fails instead of publishing an unsigned or differently signed update if signing is not configured.
 
-```shell
-gradle testDebugUnitTest assembleDebug
+The signing key and passwords are stored locally in the ignored `signing/` directory. **Back up `signing/snackloop-release.jks` and `signing/keystore.properties` somewhere secure outside this repository.** Losing the key means future APKs cannot update existing installations. Do not commit either file.
+
+To enable the GitHub Actions artifact, add these four repository secrets under **Settings → Secrets and variables → Actions**:
+
+| Secret | Value |
+| --- | --- |
+| `SNACKLOOP_KEYSTORE_BASE64` | Base64 encoding of `signing/snackloop-release.jks` |
+| `SNACKLOOP_STORE_PASSWORD` | `storePassword` from `signing/keystore.properties` |
+| `SNACKLOOP_KEY_ALIAS` | `keyAlias` from `signing/keystore.properties` |
+| `SNACKLOOP_KEY_PASSWORD` | `keyPassword` from `signing/keystore.properties` |
+
+On Windows, copy the Base64 value to the clipboard with:
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path signing/snackloop-release.jks))) | Set-Clipboard
 ```
 
-The debug APK is written to `app/build/outputs/apk/debug/app-debug.apk`. Pushes and pull requests to `main` install the pinned Gradle 8.13 release, run the tests, build the same APK with GitHub Actions, and upload it as the `SnackLoop-debug` artifact.
+Then run the **Android build** workflow on `main` and download `SnackLoop-update`. Extract `app-release.apk` from the artifact ZIP and install it. On an emulator or USB-connected device that already has a release signed with this key, `adb install -r app-release.apk` updates it without clearing app data. For local signed builds, run `gradle testDebugUnitTest assembleRelease` and use `app/build/outputs/apk/release/app-release.apk`. The local build uses the ignored signing files automatically. CI assigns a version code based on its run number.
+
+**One-time transition:** Old `SnackLoop-debug` APKs were signed with temporary debug keys. Android cannot install the new release APK over an app signed by a different key. Moving from an old debug APK to the first signed release may require one uninstall, which can remove saved history. After that, install only signed release APKs from this key; later versions update in place. A local debug APK is for development and is not an update to the release APK.
