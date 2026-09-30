@@ -23,7 +23,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-private data class Pose(
+internal data class Pose(
     val head: Offset,
     val neck: Offset,
     val hip: Offset,
@@ -102,10 +102,12 @@ private fun DrawScope.drawPose(pose: Pose, figureColor: Color, guideColor: Color
     limb(pose.hip, pose.rightKnee, pose.rightFoot)
 }
 
-private fun posesFor(id: String): Pair<Pose, Pose> = when (id) {
+internal fun posesFor(id: String): Pair<Pose, Pose> = when (id) {
     "pushups" -> Pair(
-        pose(.27f, .39f, .38f, .46f, .74f, .57f, .38f, .82f, .88f, .52f, .90f, .31f, .61f, .54f, .66f),
-        pose(.27f, .65f, .38f, .68f, .74f, .69f, .38f, .82f, .88f, .52f, .90f, .30f, .82f, .53f, .84f)
+        pose(.18f, .42f, .29f, .47f, .63f, .53f, .36f, .88f, .43f, .88f, .86f, .88f, .92f, .88f,
+            .35f, .64f, .42f, .65f),
+        pose(.18f, .66f, .29f, .70f, .63f, .70f, .36f, .88f, .43f, .88f, .86f, .88f, .92f, .88f,
+            .35f, .80f, .42f, .80f)
     )
     "squats" -> Pair(
         standing(),
