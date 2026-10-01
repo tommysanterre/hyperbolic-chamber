@@ -40,6 +40,7 @@ internal fun artworkFor(id: String, superSaiyan: Boolean = false): Int = when {
     id == "pullups" -> R.drawable.movement_pullups
     id == "dead_hang" -> R.drawable.movement_dead_hang
     id == "reverse_lunges" -> R.drawable.movement_reverse_lunges
+    id == "ring_rows" -> R.drawable.movement_ring_rows
     id == "hip_flexor" -> R.drawable.movement_hip_flexor
     else -> error("No movement artwork for $id")
 }

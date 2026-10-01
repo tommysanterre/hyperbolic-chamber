@@ -30,7 +30,7 @@ class RotationLogicTest {
             completion(exercises[offset % exercises.size], offset)
         }
 
-        assertEquals(3, state(history).currentIndex)
+        assertEquals(2, state(history).currentIndex)
     }
 
     @Test
@@ -38,7 +38,7 @@ class RotationLogicTest {
         val beforeMidnight = exercises.dropLast(1).mapIndexed { index, exercise ->
             completion(exercise, index, LocalDate.of(2026, 9, 29), 23)
         }
-        val finish = completion(exercises.last(), 6, today, 0)
+        val finish = completion(exercises.last(), exercises.lastIndex, today, 0)
 
         assertEquals(1, state(beforeMidnight + finish).rotationsOnDate)
         assertEquals(0, rotationState(beforeMidnight + finish, today.minusDays(1), zone).rotationsOnDate)
@@ -93,6 +93,18 @@ class RotationLogicTest {
     }
 
     @Test
+    fun `old seven exercise loops remain counted when ring rows is introduced`() {
+        val legacy = exercises.filter { it.id != "ring_rows" }
+            .mapIndexed { index, exercise -> completion(exercise, index, today.minusDays(1)) }
+        val current = exercises.mapIndexed { index, exercise -> completion(exercise, index) }
+
+        assertEquals(1, state(legacy).completedRotations)
+        assertEquals(2, state(legacy + current).completedRotations)
+        assertEquals(1, state(legacy + current).rotationsOnDate)
+        assertEquals(0, state(legacy + current).currentIndex)
+    }
+
+    @Test
     fun `exercise metadata preserves reps seconds and per-side wording`() {
         assertEquals(
             listOf(
@@ -102,6 +114,7 @@ class RotationLogicTest {
                 "pullups",
                 "dead_hang",
                 "reverse_lunges",
+                "ring_rows",
                 "hip_flexor"
             ),
             exercises.map { it.id }
@@ -114,6 +127,7 @@ class RotationLogicTest {
                 UnitType.REPS,
                 UnitType.SECONDS,
                 UnitType.REPS_PER_SIDE,
+                UnitType.REPS,
                 UnitType.SECONDS_PER_SIDE
             ),
             exercises.map { it.unit }
@@ -123,9 +137,10 @@ class RotationLogicTest {
                 "5–10 reps",
                 "10–15 reps",
                 "30 seconds",
-                "2–5 full pull-ups",
+                "1–2 reps",
                 "30 seconds",
                 "5 reps per side",
+                "5–10 reps",
                 "30 seconds per side"
             ),
             exercises.map { it.target }

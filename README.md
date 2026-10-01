@@ -7,10 +7,11 @@ SnackLoop is a tiny offline-first Android app for moving through a continuous ro
 1. Push-ups — 5–10 reps
 2. Squats — 10–15 reps
 3. Deep squat hold — 30 seconds
-4. Pull-ups — 2–5 full pull-ups
+4. Chin-ups — 1–2 reps
 5. Dead hang — 30 seconds
 6. Reverse lunges — 5 reps per side
-7. Hip-flexor stretch — 30 seconds per side
+7. Ring rows — 5–10 reps
+8. Hip-flexor stretch — 30 seconds per side
 
 Complete the movement shown, record the amount, and SnackLoop advances to the next movement. The queue persists across days. There is no skip action or daily limit.
 
