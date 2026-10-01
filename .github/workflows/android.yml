@@ -23,11 +23,9 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.13'
       - name: Run unit tests
         if: github.event_name == 'pull_request'
-        run: gradle testDebugUnitTest
+        run: sh ./gradlew testDebugUnitTest
       - name: Check signing setup
         if: github.event_name != 'pull_request'
         run: |
@@ -50,7 +48,7 @@ jobs:
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             version_name="${GITHUB_REF_NAME#v}"
           fi
-          gradle testDebugUnitTest assembleRelease \
+          sh ./gradlew testDebugUnitTest assembleRelease \
             -PsnackloopVersionCode="$((1000 + GITHUB_RUN_NUMBER))" \
             -PsnackloopVersionName="$version_name"
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify app/build/outputs/apk/release/app-release.apk
