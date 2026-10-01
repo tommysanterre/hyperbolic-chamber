@@ -22,11 +22,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-          cache: gradle
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
       - name: Run unit tests
+        if: github.event_name == 'pull_request'
         run: gradle testDebugUnitTest
       - name: Check signing setup
         if: github.event_name != 'pull_request'
@@ -35,7 +35,7 @@ jobs:
             echo "::error::Set the four SNACKLOOP signing secrets before publishing update APKs."
             exit 1
           fi
-      - name: Build signed update APK
+      - name: Run unit tests and build signed update APK
         if: github.event_name != 'pull_request'
         env:
           SNACKLOOP_KEYSTORE_BASE64: ${{ secrets.SNACKLOOP_KEYSTORE_BASE64 }}
@@ -50,7 +50,7 @@ jobs:
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             version_name="${GITHUB_REF_NAME#v}"
           fi
-          gradle assembleRelease \
+          gradle testDebugUnitTest assembleRelease \
             -PsnackloopVersionCode="$((1000 + GITHUB_RUN_NUMBER))" \
             -PsnackloopVersionName="$version_name"
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify app/build/outputs/apk/release/app-release.apk
