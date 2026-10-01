@@ -16,7 +16,24 @@ Complete the movement shown, record the amount, and SnackLoop advances to the ne
 
 ## Installable updates
 
-Use the **SnackLoop-update** artifact from the Android build workflow for installs and updates. It contains a signed release APK. Every workflow run on `main` uses the same signing key and a higher Android `versionCode`, so a new APK can install over the previous release while keeping saved history. The workflow fails instead of publishing an unsigned or differently signed update if signing is not configured.
+Download `app-release.apk` from the [latest release](https://github.com/tommysanterre/SnackLoop/releases/latest) for installs and updates; there is no need to open Actions or extract an artifact ZIP. Releases contain a signed APK built from the tagged commit. CI uses the same signing key and assigns an Android `versionCode` based on the workflow run number, so newer builds can update existing installations while keeping saved history. The workflow fails instead of publishing an unsigned update if signing is not configured.
+
+### Publish a release
+
+After committing and pushing these workflow changes, tag the commit you want to release and push the tag:
+
+```sh
+git tag v0.3.0
+git push origin v0.3.0
+```
+
+To release a specific commit, use `git tag v0.3.0 <commit-sha>` instead. The tagged commit must contain the release workflow. Use a new `v`-prefixed version tag for each release.
+
+Pushing the tag automatically runs unit tests, builds and verifies the signed APK, and publishes a [GitHub Release](https://github.com/tommysanterre/SnackLoop/releases) with generated release notes and `app-release.apk` under **Assets**. The Android version name comes from the tag without the leading `v` (for example, `0.3.0`). Actions does the build automatically; downloading happens directly from Releases. Private repositories still require repository access.
+
+Builds on `main` and manual workflow runs continue to provide the **SnackLoop-update** Actions artifact without publishing a release.
+
+### Signing setup
 
 The signing key and passwords are stored locally in the ignored `signing/` directory. **Back up `signing/snackloop-release.jks` and `signing/keystore.properties` somewhere secure outside this repository.** Losing the key means future APKs cannot update existing installations. Do not commit either file.
 
