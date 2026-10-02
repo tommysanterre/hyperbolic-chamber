@@ -55,7 +55,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: github.event_name != 'pull_request' && success()
         with:
-          name: SnackLoop-update
+          name: hyperbolic-update
           path: app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
 
@@ -68,7 +68,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: SnackLoop-update
+          name: hyperbolic-update
           path: release
       - name: Publish GitHub release
         env:
@@ -77,5 +77,5 @@ jobs:
         run: |
           gh release create "$GITHUB_REF_NAME" release/app-release.apk \
             --verify-tag \
-            --title "SnackLoop $GITHUB_REF_NAME" \
+            --title "hyperbolic $GITHUB_REF_NAME" \
             --generate-notes

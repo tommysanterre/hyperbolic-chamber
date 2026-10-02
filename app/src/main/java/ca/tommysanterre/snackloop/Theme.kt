@@ -28,7 +28,7 @@ private val DarkColors = darkColorScheme(
 )
 
 @Composable
-fun SnackLoopTheme(content: @Composable () -> Unit) {
+fun HyperbolicTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) DarkColors else LightColors,
         content = content

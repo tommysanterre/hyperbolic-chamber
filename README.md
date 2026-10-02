@@ -1,6 +1,6 @@
-# SnackLoop
+# hyperbolic
 
-SnackLoop is a tiny offline-first Android app for moving through a continuous rotation of movement snacks.
+hyperbolic is a tiny offline-first Android app for moving through a continuous rotation of movement snacks, named after the hyperbolic training chamber.
 
 ## Rotation
 
@@ -13,7 +13,11 @@ SnackLoop is a tiny offline-first Android app for moving through a continuous ro
 7. Ring rows — 5–10 reps
 8. Hip-flexor stretch — 30 seconds per side
 
-Complete the movement shown, record the amount, and SnackLoop advances to the next movement. The queue persists across days. There is no skip action or daily limit.
+Complete the movement shown, record the amount, and hyperbolic advances to the next movement. The queue persists across days. There is no skip action or daily limit.
+
+## Launcher icons
+
+Use the palette button in the app bar to choose from five launcher icons: the original loop, Time gate, Hourglass, Infinity room, and Gravity. The selected icon persists across launches. The package name and signing configuration intentionally retain their existing values so installed copies continue to update without losing saved history.
 
 ## Installable updates
 
@@ -32,7 +36,7 @@ To release a specific commit, use `git tag v0.3.0 <commit-sha>` instead. The tag
 
 Pushing the tag automatically runs unit tests, builds and verifies the signed APK, and publishes a [GitHub Release](https://github.com/tommysanterre/SnackLoop/releases) with generated release notes and `app-release.apk` under **Assets**. The Android version name comes from the tag without the leading `v` (for example, `0.3.0`). Actions does the build automatically; downloading happens directly from Releases. Private repositories still require repository access.
 
-Builds on `main` and manual workflow runs continue to provide the **SnackLoop-update** Actions artifact without publishing a release.
+Builds on `main` and manual workflow runs continue to provide the **hyperbolic-update** Actions artifact without publishing a release.
 
 ### Signing setup
 
@@ -53,6 +57,6 @@ On Windows, copy the Base64 value to the clipboard with:
 [Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path signing/snackloop-release.jks))) | Set-Clipboard
 ```
 
-Then run the **Android build** workflow on `main` and download `SnackLoop-update`. Extract `app-release.apk` from the artifact ZIP and install it. On an emulator or USB-connected device that already has a release signed with this key, `adb install -r app-release.apk` updates it without clearing app data. For local signed builds, run `gradle testDebugUnitTest assembleRelease` and use `app/build/outputs/apk/release/app-release.apk`. The local build uses the ignored signing files automatically. CI assigns a version code based on its run number.
+Then run the **Android build** workflow on `main` and download `hyperbolic-update`. Extract `app-release.apk` from the artifact ZIP and install it. On an emulator or USB-connected device that already has a release signed with this key, `adb install -r app-release.apk` updates it without clearing app data. For local signed builds, run `gradle testDebugUnitTest assembleRelease` and use `app/build/outputs/apk/release/app-release.apk`. The local build uses the ignored signing files automatically. CI assigns a version code based on its run number.
 
 **One-time transition:** Old `SnackLoop-debug` APKs were signed with temporary debug keys. Android cannot install the new release APK over an app signed by a different key. Moving from an old debug APK to the first signed release may require one uninstall, which can remove saved history. After that, install only signed release APKs from this key; later versions update in place. A local debug APK is for development and is not an update to the release APK.
