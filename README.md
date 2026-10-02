@@ -21,7 +21,7 @@ The app uses a single Kami Tower inspired launcher icon. The package name and si
 
 ## Installable updates
 
-Download `app-release.apk` from the [latest release](https://github.com/tommysanterre/SnackLoop/releases/latest) for installs and updates; there is no need to open Actions or extract an artifact ZIP. Releases contain a signed APK built from the tagged commit. CI uses the same signing key and assigns an Android `versionCode` based on the workflow run number, so newer builds can update existing installations while keeping saved history. The workflow fails instead of publishing an unsigned update if signing is not configured.
+Download the versioned APK, such as `Hyperbolic-Chamber-v0.3.4.apk`, from the [latest release](https://github.com/tommysanterre/SnackLoop/releases/latest) for installs and updates; there is no need to open Actions or extract an artifact ZIP. Releases contain a signed APK built from the tagged commit. CI uses the same signing key and assigns an Android `versionCode` based on the workflow run number, so newer builds can update existing installations while keeping saved history. The workflow fails instead of publishing an unsigned update if signing is not configured.
 
 ### Publish a release
 
@@ -34,7 +34,7 @@ git push origin v0.3.0
 
 To release a specific commit, use `git tag v0.3.0 <commit-sha>` instead. The tagged commit must contain the release workflow. Use a new `v`-prefixed version tag for each release.
 
-Pushing the tag automatically runs unit tests, builds and verifies the signed APK, and publishes a [GitHub Release](https://github.com/tommysanterre/SnackLoop/releases) with generated release notes and `app-release.apk` under **Assets**. The Android version name comes from the tag without the leading `v` (for example, `0.3.0`). Actions does the build automatically; downloading happens directly from Releases. Private repositories still require repository access.
+Pushing the tag automatically runs unit tests, builds and verifies the signed APK, and publishes a [GitHub Release](https://github.com/tommysanterre/SnackLoop/releases) with generated release notes and a versioned APK such as `Hyperbolic-Chamber-v0.3.4.apk` under **Assets**. The Android version name comes from the tag without the leading `v` (for example, `0.3.4`). Actions does the build automatically; downloading happens directly from Releases. Private repositories still require repository access.
 
 Builds on `main` and manual workflow runs continue to provide the **hyperbolic-update** Actions artifact without publishing a release.
 
@@ -57,6 +57,6 @@ On Windows, copy the Base64 value to the clipboard with:
 [Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path signing/snackloop-release.jks))) | Set-Clipboard
 ```
 
-Then run the **Android build** workflow on `main` and download `hyperbolic-update`. Extract `app-release.apk` from the artifact ZIP and install it. On an emulator or USB-connected device that already has a release signed with this key, `adb install -r app-release.apk` updates it without clearing app data. For local signed builds, run `gradle testDebugUnitTest assembleRelease` and use `app/build/outputs/apk/release/app-release.apk`. The local build uses the ignored signing files automatically. CI assigns a version code based on its run number.
+Then run the **Android build** workflow on `main` and download `hyperbolic-update`. Extract the versioned APK from the artifact ZIP and install it. On an emulator or USB-connected device that already has a release signed with this key, `adb install -r Hyperbolic-Chamber-v0.3.4.apk` updates it without clearing app data; use the actual downloaded filename for later versions. For local signed builds, run `gradle testDebugUnitTest assembleRelease` and use `app/build/outputs/apk/release/app-release.apk`. The local build uses the ignored signing files automatically. CI assigns a version code based on its run number.
 
 **One-time transition:** Old `SnackLoop-debug` APKs were signed with temporary debug keys. Android cannot install the new release APK over an app signed by a different key. Moving from an old debug APK to the first signed release may require one uninstall, which can remove saved history. After that, install only signed release APKs from this key; later versions update in place. A local debug APK is for development and is not an update to the release APK.
