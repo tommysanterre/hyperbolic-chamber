@@ -54,7 +54,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState())
 
     fun complete(amount: Int) {
-        if (amount <= 0) return
+        if (amount < 0) return
         viewModelScope.launch {
             runCatching {
                 dao?.insert(Completion(exerciseId = exercises[state.value.currentIndex].id, amount = amount))

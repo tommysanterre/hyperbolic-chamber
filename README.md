@@ -13,7 +13,7 @@ Hyperbolic Chamber is a tiny offline-first Android app for moving through a cont
 7. Ring rows — 5–10 reps
 8. Hip-flexor stretch — 30 seconds per side
 
-Complete the movement shown, record the amount, and Hyperbolic Chamber advances to the next movement. The queue persists across days. There is no skip action or daily limit.
+Complete the movement shown, record the amount, and Hyperbolic Chamber advances to the next movement. The queue persists across days. Tap **0** to skip any movement, including timed holds and stretches. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. Rotations count trips through the queue, including skipped movements. There is no daily limit.
 
 ## Launcher icon
 
