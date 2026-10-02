@@ -2,79 +2,14 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="hyperbolic"
+        android:label="Hyperbolic Chamber"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.Hyperbolic">
-        <activity android:name=".MainActivity" android:exported="true" />
-
-        <activity-alias
-            android:name=".launcher.Original"
-            android:enabled="true"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="hyperbolic"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:targetActivity=".MainActivity">
+        <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity-alias>
-
-        <activity-alias
-            android:name=".launcher.TimeGate"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher_time_gate"
-            android:label="hyperbolic"
-            android:roundIcon="@mipmap/ic_launcher_time_gate_round"
-            android:targetActivity=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-
-        <activity-alias
-            android:name=".launcher.Hourglass"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher_hourglass"
-            android:label="hyperbolic"
-            android:roundIcon="@mipmap/ic_launcher_hourglass_round"
-            android:targetActivity=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-
-        <activity-alias
-            android:name=".launcher.InfinityRoom"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher_infinity_room"
-            android:label="hyperbolic"
-            android:roundIcon="@mipmap/ic_launcher_infinity_room_round"
-            android:targetActivity=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-
-        <activity-alias
-            android:name=".launcher.Gravity"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher_gravity"
-            android:label="hyperbolic"
-            android:roundIcon="@mipmap/ic_launcher_gravity_round"
-            android:targetActivity=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
+        </activity>
     </application>
 </manifest>

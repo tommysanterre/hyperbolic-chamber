@@ -77,5 +77,5 @@ jobs:
         run: |
           gh release create "$GITHUB_REF_NAME" release/app-release.apk \
             --verify-tag \
-            --title "hyperbolic $GITHUB_REF_NAME" \
+            --title "Hyperbolic Chamber $GITHUB_REF_NAME" \
             --generate-notes

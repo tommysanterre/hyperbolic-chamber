@@ -1,6 +1,6 @@
-# hyperbolic
+# Hyperbolic Chamber
 
-hyperbolic is a tiny offline-first Android app for moving through a continuous rotation of movement snacks, named after the hyperbolic training chamber.
+Hyperbolic Chamber is a tiny offline-first Android app for moving through a continuous rotation of movement snacks, named after the hyperbolic training chamber.
 
 ## Rotation
 
@@ -13,11 +13,11 @@ hyperbolic is a tiny offline-first Android app for moving through a continuous r
 7. Ring rows — 5–10 reps
 8. Hip-flexor stretch — 30 seconds per side
 
-Complete the movement shown, record the amount, and hyperbolic advances to the next movement. The queue persists across days. There is no skip action or daily limit.
+Complete the movement shown, record the amount, and Hyperbolic Chamber advances to the next movement. The queue persists across days. There is no skip action or daily limit.
 
-## Launcher icons
+## Launcher icon
 
-Use the palette button in the app bar to choose from five launcher icons: the original loop, Time gate, Hourglass, Infinity room, and Gravity. The selected icon persists across launches. The package name and signing configuration intentionally retain their existing values so installed copies continue to update without losing saved history.
+The app uses a single Kami Tower inspired launcher icon. The package name and signing configuration retain their existing values so installed copies continue to update without losing saved history.
 
 ## Installable updates
 
