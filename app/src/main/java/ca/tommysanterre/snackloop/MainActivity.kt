@@ -112,9 +112,9 @@ private fun ExerciseScreen(
 ) {
     var submitting by remember(exercise.id) { mutableStateOf(false) }
     val amounts = when (exercise.id) {
-        "pushups" -> (5..10).toList()
+        "pushups", "ring_rows" -> (5..10).toList()
         "squats" -> (10..15).toList()
-        "pullups" -> (1..5).toList()
+        "pullups" -> (1..2).toList()
         "reverse_lunges" -> listOf(5)
         else -> (5..30 step 5).toList()
     }
