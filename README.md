@@ -60,5 +60,3 @@ On Windows, copy the Base64 value to the clipboard with:
 ```
 
 Then run the **Android build** workflow on `main` and download `hyperbolic-update`. Extract the versioned APK from the artifact ZIP and install it. On an emulator or USB-connected device that already has a release signed with this key, `adb install -r Hyperbolic-Chamber-v0.3.4.apk` updates it without clearing app data; use the actual downloaded filename for later versions. For local signed builds, run `gradle testDebugUnitTest assembleRelease` and use `app/build/outputs/apk/release/app-release.apk`. The local build uses the ignored signing files automatically. CI assigns a version code based on its run number.
-
-**One-time transition:** Old `SnackLoop-debug` APKs were signed with temporary debug keys. Android cannot install the new release APK over an app signed by a different key. Moving from an old debug APK to the first signed release may require one uninstall, which can remove saved history. After that, install only signed release APKs from this key; later versions update in place. A local debug APK is for development and is not an update to the release APK.
