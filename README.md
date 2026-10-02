@@ -27,14 +27,18 @@ On launch, the app checks the public GitHub Releases API and shows a dismissible
 
 ### Publish a release
 
-After committing and pushing these workflow changes, tag the commit you want to release and push the tag:
+Release by tagging the merged commit and pushing that tag. After merging the changes, update your local `main` and choose a new, unused `v`-prefixed version (the example below assumes `v0.3.9` is unused):
 
 ```sh
-git tag v0.3.0
-git push origin v0.3.0
+git switch main
+git pull --ff-only origin main
+git tag v0.3.9
+git push origin v0.3.9
 ```
 
-To release a specific commit, use `git tag v0.3.0 <commit-sha>` instead. The tagged commit must contain the release workflow. Use a new `v`-prefixed version tag for each release.
+To release a specific commit, use `git tag v0.3.9 <commit-sha>` instead. The tagged commit must contain the release workflow. Keep the existing release workflow unchanged; do not create a temporary release branch or alter its triggers to publish a release. If the available connection cannot push tags, report that limitation and provide the tag-and-push commands.
+
+Creating a release manually or creating a tag from an Action with `GITHUB_TOKEN` does not trigger the tag-push build. Push the tag using your authenticated Git connection, then let the existing workflow publish the release.
 
 Pushing the tag automatically runs unit tests, builds and verifies the signed APK, and publishes a [GitHub Release](https://github.com/tommysanterre/hyperbolic-chamber/releases) with generated release notes and a versioned APK such as `Hyperbolic-Chamber-v0.3.4.apk` under **Assets**. The Android version name comes from the tag without the leading `v` (for example, `0.3.4`). Actions does the build automatically; downloading happens directly from Releases.
 
