@@ -150,6 +150,31 @@ class RotationLogicTest {
         assertEquals("30 seconds per side", "30 ${UnitType.SECONDS_PER_SIDE.historyLabel(30)}")
     }
 
+    @Test
+    fun `zero amounts advance every exercise and undo restores the skipped movement`() {
+        val history = mutableListOf<Completion>()
+        exercises.forEachIndexed { index, exercise ->
+            history += completion(exercise, index).copy(amount = 0)
+            assertEquals((index + 1) % exercises.size, state(history).currentIndex)
+            assertEquals(index, state(history.dropLast(1)).currentIndex)
+        }
+
+        assertEquals(1, state(history.reversed()).completedRotations)
+        assertEquals(1, state(history.reversed()).rotationsOnDate)
+        assertEquals(0, state(history.dropLast(1)).completedRotations)
+    }
+
+    @Test
+    fun `skips and completed movements reconstruct the same queue after restart`() {
+        val history = exercises.mapIndexed { index, exercise ->
+            completion(exercise, index).copy(amount = if (index % 2 == 0) 0 else 5)
+        }
+
+        assertEquals(0, state(history.reversed()).currentIndex)
+        assertEquals(1, state(history.reversed()).completedRotations)
+        assertEquals(exercises.lastIndex, state(history.dropLast(1)).currentIndex)
+    }
+
     private fun state(history: List<Completion>) = rotationState(history, today, zone)
 
     private fun completion(

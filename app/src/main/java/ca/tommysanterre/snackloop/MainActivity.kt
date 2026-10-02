@@ -111,7 +111,7 @@ private fun ExerciseScreen(
     modifier: Modifier = Modifier
 ) {
     var submitting by remember(exercise.id) { mutableStateOf(false) }
-    val amounts = when (exercise.id) {
+    val amounts = listOf(0) + when (exercise.id) {
         "pushups", "ring_rows" -> (5..10).toList()
         "squats" -> (10..15).toList()
         "pullups" -> (1..2).toList()
@@ -136,7 +136,7 @@ private fun ExerciseScreen(
             }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(exercise.unit.inputLabel(), style = MaterialTheme.typography.titleMedium)
-                Text("Tap a number to record and move on", style = MaterialTheme.typography.bodyMedium)
+                Text("Tap a number to record and move on, or 0 to skip", style = MaterialTheme.typography.bodyMedium)
             }
             amounts.chunked(4).forEach { row ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -151,7 +151,8 @@ private fun ExerciseScreen(
                             enabled = !storageUnavailable && !submitting,
                             contentPadding = PaddingValues(horizontal = 4.dp, vertical = 12.dp),
                             modifier = Modifier.weight(1f).heightIn(min = 52.dp).semantics {
-                                contentDescription = "Record $amount ${exercise.unit.historyLabel(amount)} and go to next exercise"
+                                contentDescription = if (amount == 0) "Skip ${exercise.name} and go to next exercise"
+                                else "Record $amount ${exercise.unit.historyLabel(amount)} and go to next exercise"
                             }
                         ) {
                             Text(amount.toString(), style = MaterialTheme.typography.titleLarge)
@@ -181,7 +182,7 @@ private fun HistoryScreen(state: UiState, modifier: Modifier = Modifier) {
             ListItem(
                 headlineContent = { Text(ex?.name ?: item.exerciseId) },
                 supportingContent = { Text(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(item.completedAt))) },
-                trailingContent = { Text("${item.amount} ${ex?.unit?.historyLabel(item.amount) ?: "units"}") }
+                trailingContent = { Text(if (item.amount == 0) "Skipped" else "${item.amount} ${ex?.unit?.historyLabel(item.amount) ?: "units"}") }
             )
         }
     }
