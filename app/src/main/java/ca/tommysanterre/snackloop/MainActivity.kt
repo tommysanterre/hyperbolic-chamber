@@ -1,5 +1,8 @@
 ﻿package ca.tommysanterre.snackloop
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.ComponentActivity
@@ -17,6 +20,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -35,12 +39,31 @@ class MainActivity : ComponentActivity() {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HyperbolicApp(vm: MainViewModel = viewModel()) {
+    val context = LocalContext.current
     val state by vm.state.collectAsState()
     var historyOpen by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
     val exercise = exercises[state.currentIndex]
     BackHandler(enabled = historyOpen) { historyOpen = false }
+    LaunchedEffect(context, snackbarHostState) {
+        val update = checkForUpdate(context) ?: return@LaunchedEffect
+        val result = snackbarHostState.showSnackbar(
+            message = "New version ${update.version} available",
+            actionLabel = "View release",
+            withDismissAction = true,
+            duration = SnackbarDuration.Indefinite
+        )
+        if (result == SnackbarResult.ActionPerformed) {
+            try {
+                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(update.releaseUrl)))
+            } catch (_: ActivityNotFoundException) {
+                snackbarHostState.showSnackbar("No browser found to open the release")
+            }
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
