@@ -11,7 +11,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private const val RELEASES_API_URL =
-    "https://api.github.com/repos/tommysanterre/hyperbolic-time-chamber/releases/latest"
+    "https://api.github.com/repos/tommysanterre/hyperbolic-chamber/releases/latest"
 
 data class AvailableUpdate(val version: String, val releaseUrl: String)
 
@@ -32,7 +32,8 @@ suspend fun checkForUpdate(context: Context): AvailableUpdate? = withContext(Dis
             val version = release.optString("tag_name")
             val releaseUrl = release.optString("html_url")
             if (isNewerVersion(version, installedVersion) &&
-                releaseUrl.startsWith("https://github.com/tommysanterre/hyperbolic-time-chamber/releases/tag/")) {
+                (releaseUrl.startsWith("https://github.com/tommysanterre/hyperbolic-time-chamber/releases/tag/") ||
+                    releaseUrl.startsWith("https://github.com/tommysanterre/hyperbolic-chamber/releases/tag/"))) {
                 AvailableUpdate(version, releaseUrl)
             } else null
         } finally {
