@@ -1,6 +1,6 @@
-# Hyperbolic Chamber
+# Hyperbolic Time Chamber
 
-Hyperbolic Chamber is a tiny offline-first Android app for moving through a continuous rotation of movement snacks, named after the hyperbolic training chamber.
+Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a continuous rotation of movement snacks, named after the Hyperbolic Time Chamber in Dragon Ball Z.
 
 ## Rotation
 
@@ -13,7 +13,7 @@ Hyperbolic Chamber is a tiny offline-first Android app for moving through a cont
 7. Ring rows — 5–10 reps
 8. Hip-flexor stretch — 30 seconds per side
 
-Complete the movement shown, record the amount, and Hyperbolic Chamber advances to the next movement. The queue persists across days. Tap **0** to skip any movement, including timed holds and stretches. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. Rotations count trips through the queue, including skipped movements. There is no daily limit.
+Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days. Tap **0** to skip any movement, including timed holds and stretches. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. Rotations count trips through the queue, including skipped movements. There is no daily limit.
 
 ## Launcher icon
 
@@ -21,7 +21,7 @@ The app uses a single Kami Tower inspired launcher icon. The package name and si
 
 ## Installable updates
 
-Download the versioned APK, such as `Hyperbolic-Chamber-v0.3.4.apk`, from the [latest release](https://github.com/tommysanterre/hyperbolic-chamber/releases/latest) for installs and updates; there is no need to open Actions or extract an artifact ZIP. Releases contain a signed APK built from the tagged commit. CI uses the same signing key and assigns an Android `versionCode` based on the workflow run number, so newer builds can update existing installations while keeping saved history. The workflow fails instead of publishing an unsigned update if signing is not configured.
+Download the versioned APK, such as `Hyperbolic-Time-Chamber-v0.3.11.apk`, from the [latest release](https://github.com/tommysanterre/hyperbolic-chamber/releases/latest) for installs and updates; there is no need to open Actions or extract an artifact ZIP. Releases contain a signed APK built from the tagged commit. CI uses the same signing key and assigns an Android `versionCode` based on the workflow run number, so newer builds can update existing installations while keeping saved history. The workflow fails instead of publishing an unsigned update if signing is not configured.
 
 On launch, the app checks the public GitHub Releases API and shows a dismissible prompt only when the latest published release has a newer version than the installed app. The prompt opens that release in a browser. If the check cannot reach GitHub, the app continues normally and tries again on the next launch. Installing the APK remains a manual step.
 
@@ -40,7 +40,7 @@ To release a specific commit, use `git tag v0.3.9 <commit-sha>` instead. The tag
 
 Creating a release manually or creating a tag from an Action with `GITHUB_TOKEN` does not trigger the tag-push build. Push the tag using your authenticated Git connection, then let the existing workflow publish the release.
 
-Pushing the tag automatically runs unit tests, builds and verifies the signed APK, and publishes a [GitHub Release](https://github.com/tommysanterre/hyperbolic-chamber/releases) with generated release notes and a versioned APK such as `Hyperbolic-Chamber-v0.3.4.apk` under **Assets**. The Android version name comes from the tag without the leading `v` (for example, `0.3.4`). Actions does the build automatically; downloading happens directly from Releases.
+Pushing the tag automatically runs unit tests, builds and verifies the signed APK, and publishes a [GitHub Release](https://github.com/tommysanterre/hyperbolic-chamber/releases) with generated release notes and a versioned APK such as `Hyperbolic-Time-Chamber-v0.3.11.apk` under **Assets**. The Android version name comes from the tag without the leading `v` (for example, `0.3.11`). Actions does the build automatically; downloading happens directly from Releases.
 
 Builds on `main` and manual workflow runs continue to provide the **hyperbolic-update** Actions artifact without publishing a release.
 
@@ -63,4 +63,4 @@ On Windows, copy the Base64 value to the clipboard with:
 [Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path signing/snackloop-release.jks))) | Set-Clipboard
 ```
 
-Then run the **Android build** workflow on `main` and download `hyperbolic-update`. Extract the versioned APK from the artifact ZIP and install it. On an emulator or USB-connected device that already has a release signed with this key, `adb install -r Hyperbolic-Chamber-v0.3.4.apk` updates it without clearing app data; use the actual downloaded filename for later versions. For local signed builds, run `gradle testDebugUnitTest assembleRelease` and use `app/build/outputs/apk/release/app-release.apk`. The local build uses the ignored signing files automatically. CI assigns a version code based on its run number.
+Then run the **Android build** workflow on `main` and download `hyperbolic-update`. Extract the versioned APK from the artifact ZIP and install it. On an emulator or USB-connected device that already has a release signed with this key, `adb install -r Hyperbolic-Time-Chamber-v0.3.11.apk` updates it without clearing app data; use the actual downloaded filename for later versions. For local signed builds, run `gradle testDebugUnitTest assembleRelease` and use `app/build/outputs/apk/release/app-release.apk`. The local build uses the ignored signing files automatically. CI assigns a version code based on its run number.

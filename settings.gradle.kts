@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "hyperbolic"
+rootProject.name = "hyperbolic-time-chamber"
 include(":app")
