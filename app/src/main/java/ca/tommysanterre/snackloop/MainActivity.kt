@@ -69,7 +69,7 @@ fun HyperbolicApp(vm: MainViewModel = viewModel()) {
                 title = {
                     Text(
                         if (historyOpen) "History  \u00B7  \u21BB ${state.rotationsToday} today"
-                        else "Hyperbolic Chamber  \u00B7  \u21BB ${state.rotationsToday} today"
+                        else "Hyperbolic Time Chamber  \u00B7  \u21BB ${state.rotationsToday} today"
                     )
                 },
                 navigationIcon = {
@@ -163,7 +163,7 @@ private fun ExerciseScreen(
             }
             if (storageUnavailable) {
                 Text(
-                    "Your saved history couldn't be opened. Hyperbolic Chamber will stay open, but recording is unavailable. Try restarting the app.",
+                    "Your saved history couldn't be opened. Hyperbolic Time Chamber will stay open, but recording is unavailable. Try restarting the app.",
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium
                 )
