@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.text.DateFormat
 import java.util.Date
@@ -65,26 +66,41 @@ fun HyperbolicApp(vm: MainViewModel = viewModel()) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        if (historyOpen) "History  \u00B7  \u21BB ${state.rotationsToday} today"
-                        else "Hyperbolic Time Chamber  \u00B7  \u21BB ${state.rotationsToday} today"
-                    )
-                },
-                navigationIcon = {
-                    if (historyOpen) IconButton(onClick = { historyOpen = false }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+            Surface {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .windowInsetsPadding(TopAppBarDefaults.windowInsets)
+                        .heightIn(min = 80.dp)
+                        .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (historyOpen) {
+                        IconButton(onClick = { historyOpen = false }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        }
                     }
-                },
-                actions = {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            if (historyOpen) "History" else "Hyperbolic Time Chamber",
+                            style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp)
+                        )
+                        Text(
+                            "\u21BB ${state.rotationsToday} today",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                     if (!historyOpen) {
                         IconButton(onClick = { historyOpen = true }) {
                             Icon(Icons.Default.History, "History")
                         }
                     }
                 }
-            )
+            }
         }
     ) { padding ->
         if (historyOpen) HistoryScreen(state, Modifier.padding(padding))
