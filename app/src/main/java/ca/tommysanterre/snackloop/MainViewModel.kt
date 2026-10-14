@@ -34,9 +34,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         while (true) {
             val zone = ZoneId.systemDefault()
             val now = ZonedDateTime.now(zone)
-            emit(now.toLocalDate())
-            val nextMidnight = now.toLocalDate().plusDays(1).atStartOfDay(zone)
-            delay(Duration.between(now, nextMidnight).toMillis().coerceAtLeast(1_000))
+            emit(workoutDate(now))
+            val nextDay = nextWorkoutDayStart(now)
+            delay(Duration.between(now, nextDay).toMillis().coerceIn(1_000, 60_000))
         }
     }
 

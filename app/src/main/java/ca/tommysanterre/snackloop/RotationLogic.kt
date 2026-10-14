@@ -3,6 +3,14 @@ package ca.tommysanterre.snackloop
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZonedDateTime
+
+/** The local workout day runs from 4 AM until 4 AM the following calendar day. */
+fun workoutDate(time: ZonedDateTime): LocalDate =
+    time.toLocalDate().minusDays(if (time.hour < 4) 1 else 0)
+
+fun nextWorkoutDayStart(time: ZonedDateTime): ZonedDateTime =
+    workoutDate(time).plusDays(1).atTime(4, 0).atZone(time.zone)
 
 data class RotationState(
     val currentIndex: Int,
@@ -19,36 +27,32 @@ fun rotationState(
     var expectedIndex = 0
     var rotationsOnDate = 0
     var completedRotations = 0
-    var ringRowsStarted = false
+    var activeDate: LocalDate? = null
+    var exercisesInLoop = 0
 
     completions
         .sortedWith(compareBy<Completion> { it.completedAt }.thenBy { it.id })
         .forEach { completion ->
             val completedIndex = exercises.indexOfFirst { it.id == completion.exerciseId }
             if (completedIndex < 0) return@forEach
-            if (completion.exerciseId == "ring_rows") ringRowsStarted = true
-
-            // Preserve completed seven-exercise loops recorded before ring rows was added.
-            val finishesLegacyLoop = !ringRowsStarted &&
-                exercises[expectedIndex].id == "ring_rows" &&
-                completion.exerciseId == "hip_flexor"
-
-            // A mismatch should never be written by the app. Resynchronizing from the stored
-            // exercise keeps an old or manually altered database usable without inventing a
-            // completed rotation.
-            if (completedIndex != expectedIndex && !finishesLegacyLoop) {
-                expectedIndex = (completedIndex + 1) % exercises.size
-                return@forEach
+            val completionDate = workoutDate(
+                Instant.ofEpochMilli(completion.completedAt).atZone(zoneId)
+            )
+            if (completionDate != activeDate || completedIndex != expectedIndex) {
+                // Each day starts a new loop at its first recorded exercise. A broken
+                // sequence also starts over, while the queue still follows history.
+                exercisesInLoop = 0
+                activeDate = completionDate
             }
 
-            if (completedIndex == exercises.lastIndex) {
+            // Skipping advances the queue, but cannot contribute to a completed loop.
+            exercisesInLoop = if (completion.amount > 0) exercisesInLoop + 1 else 0
+            expectedIndex = (completedIndex + 1) % exercises.size
+            if (exercisesInLoop == exercises.size) {
                 completedRotations++
-                val completionDate = Instant.ofEpochMilli(completion.completedAt)
-                    .atZone(zoneId)
-                    .toLocalDate()
                 if (completionDate == date) rotationsOnDate++
+                exercisesInLoop = 0
             }
-            expectedIndex = (expectedIndex + 1) % exercises.size
         }
 
     return RotationState(expectedIndex, rotationsOnDate, completedRotations)

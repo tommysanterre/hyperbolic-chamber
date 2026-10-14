@@ -13,7 +13,7 @@ Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a
 7. Ring rows — 5–10 reps
 8. Hip-flexor stretch — 30 seconds per side
 
-Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days. Tap **0** to skip any movement, including timed holds and stretches. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. Rotations count trips through the queue, including skipped movements. There is no daily limit.
+Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days. A workout day runs from **4 AM to 4 AM in your local time**. A loop counts only after completing all eight exercises in order within that same workout day, returning the queue to the exercise where the loop started. For example, if your day starts at ring rows, complete ring rows and the following seven exercises to return to ring rows and earn a loop. Partial loops do not carry over at 4 AM. Tap **0** to skip any movement, including timed holds and stretches. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. A skip advances the queue but resets progress toward a completed loop; complete all eight exercises after it to earn the next loop. There is no daily limit.
 
 ## Launcher icon
 

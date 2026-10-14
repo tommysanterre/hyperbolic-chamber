@@ -34,14 +34,73 @@ class RotationLogicTest {
     }
 
     @Test
-    fun `rotation spanning midnight is credited when it finishes`() {
+    fun `rotation spanning midnight stays in the previous workout day`() {
         val beforeMidnight = exercises.dropLast(1).mapIndexed { index, exercise ->
             completion(exercise, index, LocalDate.of(2026, 9, 29), 23)
         }
         val finish = completion(exercises.last(), exercises.lastIndex, today, 0)
 
-        assertEquals(1, state(beforeMidnight + finish).rotationsOnDate)
-        assertEquals(0, rotationState(beforeMidnight + finish, today.minusDays(1), zone).rotationsOnDate)
+        assertEquals(0, state(beforeMidnight + finish).rotationsOnDate)
+        assertEquals(1, rotationState(beforeMidnight + finish, today.minusDays(1), zone).rotationsOnDate)
+        assertEquals(1, state(beforeMidnight + finish).completedRotations)
+    }
+
+    @Test
+    fun `rotation crossing 4 AM does not count and queue position persists`() {
+        val beforeBoundary = exercises.dropLast(1).mapIndexed { index, exercise ->
+            completion(exercise, index, today, 3)
+        }
+        val afterBoundary = exercises.indices.map { offset ->
+            completion(exercises[(exercises.lastIndex + offset) % exercises.size], offset, today, 4)
+        }
+
+        val partial = state(beforeBoundary + afterBoundary.take(1))
+        assertEquals(0, partial.currentIndex)
+        assertEquals(0, partial.rotationsOnDate)
+        assertEquals(0, partial.completedRotations)
+        val full = state(beforeBoundary + afterBoundary)
+        assertEquals(exercises.lastIndex, full.currentIndex)
+        assertEquals(1, full.rotationsOnDate)
+        assertEquals(1, full.completedRotations)
+    }
+
+    @Test
+    fun `day starting at ring rows counts only on returning to ring rows`() {
+        val startIndex = exercises.indexOfFirst { it.id == "ring_rows" }
+        val previousDay = exercises.take(startIndex).mapIndexed { index, exercise ->
+            completion(exercise, index, today.minusDays(1))
+        }
+        val currentDay = (0 until exercises.size * 2).map { offset ->
+            completion(exercises[(startIndex + offset) % exercises.size], offset)
+        }
+
+        assertEquals(startIndex, state(previousDay).currentIndex)
+        assertEquals(0, state(previousDay + currentDay.take(2)).completedRotations)
+        assertEquals(0, state(previousDay + currentDay.take(exercises.size - 1)).rotationsOnDate)
+        val firstLoop = state(previousDay + currentDay.take(exercises.size))
+        assertEquals(startIndex, firstLoop.currentIndex)
+        assertEquals(1, firstLoop.rotationsOnDate)
+        assertEquals(2, state(previousDay + currentDay).completedRotations)
+        assertEquals(2, state(previousDay + currentDay).rotationsOnDate)
+    }
+
+    @Test
+    fun `workout day changes exactly at 4 AM local time`() {
+        assertEquals(today.minusDays(1), workoutDate(today.atTime(3, 59, 59).atZone(zone)))
+        assertEquals(today, workoutDate(today.atTime(4, 0).atZone(zone)))
+        assertEquals(today, workoutDate(today.plusDays(1).atTime(3, 59, 59).atZone(zone)))
+        assertEquals(today.atTime(4, 0).atZone(zone), nextWorkoutDayStart(today.atTime(3, 59).atZone(zone)))
+        assertEquals(today.plusDays(1).atTime(4, 0).atZone(zone), nextWorkoutDayStart(today.atTime(4, 0).atZone(zone)))
+    }
+
+    @Test
+    fun `4 AM boundary follows local time through daylight saving changes`() {
+        listOf(LocalDate.of(2026, 3, 8), LocalDate.of(2026, 11, 1)).forEach { date ->
+            val beforeBoundary = date.atTime(3, 30).atZone(zone)
+            assertEquals(date.minusDays(1), workoutDate(beforeBoundary))
+            assertEquals(date.atTime(4, 0).atZone(zone), nextWorkoutDayStart(beforeBoundary))
+            assertEquals(date, workoutDate(date.atTime(4, 0).atZone(zone)))
+        }
     }
 
     @Test
@@ -93,13 +152,13 @@ class RotationLogicTest {
     }
 
     @Test
-    fun `old seven exercise loops remain counted when ring rows is introduced`() {
+    fun `seven exercise history cannot count a loop missing ring rows`() {
         val legacy = exercises.filter { it.id != "ring_rows" }
             .mapIndexed { index, exercise -> completion(exercise, index, today.minusDays(1)) }
         val current = exercises.mapIndexed { index, exercise -> completion(exercise, index) }
 
-        assertEquals(1, state(legacy).completedRotations)
-        assertEquals(2, state(legacy + current).completedRotations)
+        assertEquals(0, state(legacy).completedRotations)
+        assertEquals(1, state(legacy + current).completedRotations)
         assertEquals(1, state(legacy + current).rotationsOnDate)
         assertEquals(0, state(legacy + current).currentIndex)
     }
@@ -159,8 +218,8 @@ class RotationLogicTest {
             assertEquals(index, state(history.dropLast(1)).currentIndex)
         }
 
-        assertEquals(1, state(history.reversed()).completedRotations)
-        assertEquals(1, state(history.reversed()).rotationsOnDate)
+        assertEquals(0, state(history.reversed()).completedRotations)
+        assertEquals(0, state(history.reversed()).rotationsOnDate)
         assertEquals(0, state(history.dropLast(1)).completedRotations)
     }
 
@@ -171,8 +230,20 @@ class RotationLogicTest {
         }
 
         assertEquals(0, state(history.reversed()).currentIndex)
-        assertEquals(1, state(history.reversed()).completedRotations)
+        assertEquals(0, state(history.reversed()).completedRotations)
         assertEquals(exercises.lastIndex, state(history.dropLast(1)).currentIndex)
+    }
+
+    @Test
+    fun `a full sequence after a skip can complete a loop`() {
+        val skipped = completion(exercises.first(), 0).copy(amount = 0)
+        val following = (1..exercises.size).map { offset ->
+            completion(exercises[offset % exercises.size], offset)
+        }
+
+        assertEquals(0, state(listOf(skipped) + following.dropLast(1)).completedRotations)
+        assertEquals(1, state(listOf(skipped) + following).completedRotations)
+        assertEquals(1, state(listOf(skipped) + following).currentIndex)
     }
 
     private fun state(history: List<Completion>) = rotationState(history, today, zone)
