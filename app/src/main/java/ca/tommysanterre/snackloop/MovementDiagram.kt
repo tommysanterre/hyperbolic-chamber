@@ -32,6 +32,14 @@ import kotlin.math.roundToInt
 internal fun artworkFor(id: String, superSaiyan: Boolean = false): Int = when {
     superSaiyan && id == "pushups" -> R.drawable.movement_pushups_ssj
     superSaiyan && id == "squats" -> R.drawable.movement_squats_ssj
+    superSaiyan && id == "three_point_bridge" -> R.drawable.movement_three_point_bridge_ssj
+    superSaiyan && id == "pullups" -> R.drawable.movement_pullups_ssj
+    superSaiyan && id == "single_leg_rdl" -> R.drawable.movement_single_leg_rdl_ssj
+    superSaiyan && id == "tuck_l_sit" -> R.drawable.movement_tuck_l_sit_ssj
+    superSaiyan && id == "reverse_lunges" -> R.drawable.movement_reverse_lunges_ssj
+    superSaiyan && id == "ring_rows" -> R.drawable.movement_ring_rows_ssj
+    superSaiyan && id == "ring_hamstring_curls" -> R.drawable.movement_ring_hamstring_curls_ssj
+    superSaiyan && id == "pike_pushups" -> R.drawable.movement_pike_pushups_ssj
     superSaiyan && id == "deep_squat" -> R.drawable.movement_deep_squat_ssj
     superSaiyan && id == "dead_hang" -> R.drawable.movement_dead_hang_ssj
     id == "pushups" -> R.drawable.movement_pushups
@@ -42,6 +50,11 @@ internal fun artworkFor(id: String, superSaiyan: Boolean = false): Int = when {
     id == "reverse_lunges" -> R.drawable.movement_reverse_lunges
     id == "ring_rows" -> R.drawable.movement_ring_rows
     id == "hip_flexor" -> R.drawable.movement_hip_flexor
+    id == "three_point_bridge" -> R.drawable.movement_three_point_bridge
+    id == "single_leg_rdl" -> R.drawable.movement_single_leg_rdl
+    id == "tuck_l_sit" -> R.drawable.movement_tuck_l_sit
+    id == "ring_hamstring_curls" -> R.drawable.movement_ring_hamstring_curls
+    id == "pike_pushups" -> R.drawable.movement_pike_pushups
     else -> error("No movement artwork for $id")
 }
 
@@ -52,14 +65,16 @@ fun MovementDiagram(exercise: Exercise, superSaiyan: Boolean) {
     val image = remember(artwork) {
         BitmapFactory.decodeResource(context.resources, artwork).asImageBitmap()
     }
+    // The deadlift illustration has a narrower start panel in both character forms.
+    val split = if (exercise.id == "single_leg_rdl") image.width * 11 / 24 else image.width / 2
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        PoseCard("START", exercise.name, image, 0, Modifier.weight(1f))
-        PoseCard("END", exercise.name, image, 1, Modifier.weight(1f))
+        PoseCard("START", exercise.name, image, 0, split, Modifier.weight(1f))
+        PoseCard("END", exercise.name, image, 1, split, Modifier.weight(1f))
     }
 }
 
 @Composable
-private fun PoseCard(label: String, movement: String, image: ImageBitmap, panel: Int, modifier: Modifier = Modifier) {
+private fun PoseCard(label: String, movement: String, image: ImageBitmap, panel: Int, split: Int, modifier: Modifier = Modifier) {
     ElevatedCard(
         modifier.height(256.dp).semantics { contentDescription = "$label position for $movement" }
     ) {
@@ -73,20 +88,22 @@ private fun PoseCard(label: String, movement: String, image: ImageBitmap, panel:
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
-            Canvas(Modifier.fillMaxWidth().weight(1f)) { drawPanel(image, panel) }
+            Canvas(Modifier.fillMaxWidth().weight(1f)) { drawPanel(image, panel, split) }
         }
     }
 }
 
-private fun DrawScope.drawPanel(image: ImageBitmap, panel: Int) {
-    val halfWidth = image.width / 2
-    val scale = minOf(size.width / halfWidth, size.height / image.height)
-    val width = (halfWidth * scale).roundToInt().coerceAtLeast(1)
+private fun DrawScope.drawPanel(image: ImageBitmap, panel: Int, split: Int) {
+    // Omit the separator itself so it does not appear at the edge of either card.
+    val sourceLeft = if (panel == 0) 0 else split + 3
+    val sourceWidth = if (panel == 0) split - 3 else image.width - sourceLeft
+    val scale = minOf(size.width / sourceWidth, size.height / image.height)
+    val width = (sourceWidth * scale).roundToInt().coerceAtLeast(1)
     val height = (image.height * scale).roundToInt().coerceAtLeast(1)
     drawImage(
         image = image,
-        srcOffset = IntOffset(panel * halfWidth, 0),
-        srcSize = IntSize(halfWidth, image.height),
+        srcOffset = IntOffset(sourceLeft, 0),
+        srcSize = IntSize(sourceWidth, image.height),
         dstOffset = IntOffset(((size.width - width) / 2).roundToInt(), ((size.height - height) / 2).roundToInt()),
         dstSize = IntSize(width, height),
         filterQuality = FilterQuality.High

@@ -6,14 +6,33 @@ Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a
 
 1. Push-ups — 5–10 reps
 2. Squats — 10–15 reps
-3. Deep squat hold — 30 seconds
+3. Three-point bridge — 3–5 reps per side
 4. Chin-ups — 1–2 reps
-5. Dead hang — 30 seconds
-6. Reverse lunges — 5 reps per side
-7. Ring rows — 5–10 reps
-8. Hip-flexor stretch — 30 seconds per side
+5. Supported single-leg Romanian deadlift — 5–8 reps per side
+6. Tuck L-sit — 5–15 seconds
+7. Reverse lunges — 5 reps per side
+8. Ring rows — 5–10 reps
+9. Ring hamstring curls — 5–8 reps
+10. Pike push-ups — 3–6 reps
 
-Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days. A workout day runs from **4 AM to 4 AM in your local time**. A loop counts only after completing all eight exercises in order within that same workout day, returning the queue to the exercise where the loop started. For example, if your day starts at ring rows, complete ring rows and the following seven exercises to return to ring rows and earn a loop. Partial loops do not carry over at 4 AM. Tap **0** to skip any movement, including timed holds and stretches. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. A skip advances the queue but resets progress toward a completed loop; complete all eight exercises after it to earn the next loop. There is no daily limit.
+Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days: at 4–6 movements per day, work through the routine over roughly 2 days and resume wherever you stopped. There is no daily completion requirement or limit. Dead hangs, hip-flexor stretches and calf raises can be done as optional extras outside the tracked rotation.
+
+A workout day runs from **4 AM to 4 AM in your local time**. The existing daily loop counter counts only after completing all ten exercises in order within that same workout day, returning the queue to the exercise where the loop started. For example, if your day starts at ring rows, complete ring rows and the following nine exercises to return to ring rows and earn a loop. Partial progress toward this daily counter does not carry over at 4 AM; your position in the exercise queue does. Tap **0** to skip any movement, including timed holds. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. A skip advances the queue but resets progress toward a completed loop; complete all ten exercises after it to earn the next loop.
+
+Updating from the previous eight-movement routine keeps saved history, its original movement names and units, and previously earned loop totals. New records use the ten-movement routine; a partial old loop cannot be combined with the new routine to earn a loop. Retired movements are no longer queued. The queue resumes after the last saved movement, using the next appropriate movement in the new routine.
+
+## Movement illustrations
+
+The ten movements use four adult Saiyans, with character totals differing by at most one:
+
+| Character | Movements |
+| --- | --- |
+| Goku | Push-ups; supported single-leg Romanian deadlift; pike push-ups |
+| Vegeta | Squats; tuck L-sit; reverse lunges |
+| Gohan | Three-point bridge; chin-ups |
+| Trunks | Ring rows; ring hamstring curls |
+
+Every movement has base-form and Super Saiyan artwork. The existing transformation unlock after two completed loops applies to all ten movements. Goku and Vegeta demonstrate three movements each; Gohan and adult Future Trunks demonstrate two each. All figures have adult proportions. The artwork assets, references and generation prompts are documented in [routine-artwork.md](docs/routine-artwork.md).
 
 ## Launcher icon
 

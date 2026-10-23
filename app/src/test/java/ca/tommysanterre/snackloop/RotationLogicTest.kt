@@ -11,7 +11,7 @@ class RotationLogicTest {
     private val today = LocalDate.of(2026, 9, 30)
 
     @Test
-    fun `exercise advances in order and wraps after hip flexor stretch`() {
+    fun `exercise advances in order and wraps after pike pushups`() {
         assertEquals(0, state(emptyList()).currentIndex)
 
         val history = mutableListOf<Completion>()
@@ -26,7 +26,7 @@ class RotationLogicTest {
 
     @Test
     fun `queue position reconstructs from persisted ordered history`() {
-        val history = (0..9).map { offset ->
+        val history = (0 until exercises.size + 2).map { offset ->
             completion(exercises[offset % exercises.size], offset)
         }
 
@@ -153,8 +153,10 @@ class RotationLogicTest {
 
     @Test
     fun `seven exercise history cannot count a loop missing ring rows`() {
-        val legacy = exercises.filter { it.id != "ring_rows" }
-            .mapIndexed { index, exercise -> completion(exercise, index, today.minusDays(1)) }
+        val legacy = legacyExercises.filter { it.id != "ring_rows" }
+            .mapIndexed { index, exercise ->
+                completion(exercise, index, today.minusDays(1)).copy(routineVersion = 1)
+            }
         val current = exercises.mapIndexed { index, exercise -> completion(exercise, index) }
 
         assertEquals(0, state(legacy).completedRotations)
@@ -169,12 +171,14 @@ class RotationLogicTest {
             listOf(
                 "pushups",
                 "squats",
-                "deep_squat",
+                "three_point_bridge",
                 "pullups",
-                "dead_hang",
+                "single_leg_rdl",
+                "tuck_l_sit",
                 "reverse_lunges",
                 "ring_rows",
-                "hip_flexor"
+                "ring_hamstring_curls",
+                "pike_pushups"
             ),
             exercises.map { it.id }
         )
@@ -182,12 +186,14 @@ class RotationLogicTest {
             listOf(
                 UnitType.REPS,
                 UnitType.REPS,
-                UnitType.SECONDS,
+                UnitType.REPS_PER_SIDE,
                 UnitType.REPS,
+                UnitType.REPS_PER_SIDE,
                 UnitType.SECONDS,
                 UnitType.REPS_PER_SIDE,
                 UnitType.REPS,
-                UnitType.SECONDS_PER_SIDE
+                UnitType.REPS,
+                UnitType.REPS
             ),
             exercises.map { it.unit }
         )
@@ -195,12 +201,14 @@ class RotationLogicTest {
             listOf(
                 "5–10 reps",
                 "10–15 reps",
-                "30 seconds",
+                "3–5 reps per side",
                 "1–2 reps",
-                "30 seconds",
+                "5–8 reps per side",
+                "5–15 seconds",
                 "5 reps per side",
                 "5–10 reps",
-                "30 seconds per side"
+                "5–8 reps",
+                "3–6 reps"
             ),
             exercises.map { it.target }
         )
@@ -244,6 +252,64 @@ class RotationLogicTest {
         assertEquals(0, state(listOf(skipped) + following.dropLast(1)).completedRotations)
         assertEquals(1, state(listOf(skipped) + following).completedRotations)
         assertEquals(1, state(listOf(skipped) + following).currentIndex)
+    }
+
+    @Test
+    fun `old eight movement loops keep their totals after upgrade`() {
+        val legacy = (0 until legacyExercises.size * 2).map { offset ->
+            completion(legacyExercises[offset % legacyExercises.size], offset, today.minusDays(1))
+                .copy(routineVersion = 1)
+        }
+        val current = exercises.mapIndexed { index, exercise -> completion(exercise, index) }
+
+        assertEquals(2, state(legacy).completedRotations)
+        assertEquals(0, state(legacy).currentIndex)
+        assertEquals(3, state((legacy + current).reversed()).completedRotations)
+        assertEquals(1, state(legacy + current).rotationsOnDate)
+        assertEquals(2, state(legacy + current.dropLast(1)).completedRotations)
+    }
+
+    @Test
+    fun `upgrade resumes after every legacy movement and preserves undo`() {
+        val expectedNextIds = listOf(
+            "squats", "three_point_bridge", "pullups", "single_leg_rdl",
+            "single_leg_rdl", "ring_rows", "ring_hamstring_curls", "pushups"
+        )
+        legacyExercises.forEachIndexed { index, exercise ->
+            val legacy = listOf(completion(exercise, 0).copy(routineVersion = 1))
+            val next = exercises[state(legacy).currentIndex]
+            assertEquals(exercise.id, expectedNextIds[index], next.id)
+            val updated = legacy + completion(next, 1)
+            assertEquals((exercises.indexOf(next) + 1) % exercises.size, state(updated).currentIndex)
+            assertEquals(exercises.indexOf(next), state(updated.dropLast(1)).currentIndex)
+        }
+    }
+
+    @Test
+    fun `changing routines within a day cannot combine partial loops`() {
+        val legacy = legacyExercises.take(2).mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 1)
+        }
+        val start = exercises.indexOfFirst { it.id == "three_point_bridge" }
+        val current = exercises.indices.map { offset ->
+            completion(exercises[(start + offset) % exercises.size], offset + legacy.size)
+        }
+
+        assertEquals(0, state(legacy + current.dropLast(1)).completedRotations)
+        assertEquals(1, state(legacy + current).completedRotations)
+        assertEquals(start, state(legacy + current).currentIndex)
+    }
+
+    @Test
+    fun `a skipped legacy movement resumes the new queue without earning a loop`() {
+        val legacy = legacyExercises.mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 1, amount = if (index == 4) 0 else 5)
+        }
+
+        assertEquals(0, state(legacy).completedRotations)
+        assertEquals(0, state(legacy).currentIndex)
+        assertEquals(0, state(legacy.take(5)).completedRotations)
+        assertEquals("single_leg_rdl", exercises[state(legacy.take(5)).currentIndex].id)
     }
 
     private fun state(history: List<Completion>) = rotationState(history, today, zone)

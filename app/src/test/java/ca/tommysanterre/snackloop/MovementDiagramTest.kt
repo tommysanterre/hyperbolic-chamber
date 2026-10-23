@@ -2,20 +2,21 @@ package ca.tommysanterre.snackloop
 
 import org.junit.Test
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 
 class MovementDiagramTest {
     @Test
-    fun `every exercise has its own artwork`() {
-        val art = exercises.map { exercise -> artworkFor(exercise.id) }
-        assertEquals(art.size, art.distinct().size)
+    fun `every exercise has its own artwork in both forms`() {
+        listOf(false, true).forEach { superSaiyan ->
+            val art = exercises.map { exercise -> artworkFor(exercise.id, superSaiyan) }
+            assertEquals(art.size, art.distinct().size)
+        }
     }
 
     @Test
-    fun `only saiyan artwork changes in super saiyan mode`() {
-        val saiyanIds = setOf("pushups", "squats", "deep_squat", "dead_hang")
+    fun `every active movement transforms in super saiyan mode`() {
         exercises.forEach { exercise ->
-            val changed = artworkFor(exercise.id) != artworkFor(exercise.id, superSaiyan = true)
-            assertEquals(exercise.id in saiyanIds, changed)
+            assertNotEquals(exercise.id, artworkFor(exercise.id), artworkFor(exercise.id, superSaiyan = true))
         }
     }
 }

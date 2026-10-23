@@ -127,13 +127,7 @@ private fun ExerciseScreen(
     modifier: Modifier = Modifier
 ) {
     var submitting by remember(exercise.id) { mutableStateOf(false) }
-    val amounts = listOf(0) + when (exercise.id) {
-        "pushups", "ring_rows" -> (5..10).toList()
-        "squats" -> (10..15).toList()
-        "pullups" -> (1..2).toList()
-        "reverse_lunges" -> listOf(5)
-        else -> (5..30 step 5).toList()
-    }
+    val amounts = exercise.recordingAmounts()
     val instructionsScrollState = rememberScrollState()
     LaunchedEffect(exercise.id) { instructionsScrollState.scrollTo(0) }
     Column(modifier.fillMaxSize().padding(24.dp)) {
@@ -194,7 +188,7 @@ private fun HistoryScreen(state: UiState, modifier: Modifier = Modifier) {
     if (state.completions.isEmpty()) Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("No movement snacks yet") }
     else LazyColumn(modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         items(state.completions, key = { it.id }) { item ->
-            val ex = exercises.firstOrNull { it.id == item.exerciseId }
+            val ex = exerciseForId(item.exerciseId)
             ListItem(
                 headlineContent = { Text(ex?.name ?: item.exerciseId) },
                 supportingContent = { Text(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(item.completedAt))) },

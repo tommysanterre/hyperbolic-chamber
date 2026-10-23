@@ -25,35 +25,42 @@ fun rotationState(
     zoneId: ZoneId
 ): RotationState {
     var expectedIndex = 0
+    var currentIndex = 0
     var rotationsOnDate = 0
     var completedRotations = 0
     var activeDate: LocalDate? = null
+    var activeRoutineVersion: Int? = null
     var exercisesInLoop = 0
 
     completions
         .sortedWith(compareBy<Completion> { it.completedAt }.thenBy { it.id })
         .forEach { completion ->
-            val completedIndex = exercises.indexOfFirst { it.id == completion.exerciseId }
+            val routine = exercisesForRoutine(completion.routineVersion)
+            val completedIndex = routine.indexOfFirst { it.id == completion.exerciseId }
             if (completedIndex < 0) return@forEach
             val completionDate = workoutDate(
                 Instant.ofEpochMilli(completion.completedAt).atZone(zoneId)
             )
-            if (completionDate != activeDate || completedIndex != expectedIndex) {
+            if (completionDate != activeDate || completedIndex != expectedIndex ||
+                completion.routineVersion != activeRoutineVersion
+            ) {
                 // Each day starts a new loop at its first recorded exercise. A broken
                 // sequence also starts over, while the queue still follows history.
                 exercisesInLoop = 0
                 activeDate = completionDate
+                activeRoutineVersion = completion.routineVersion
             }
 
             // Skipping advances the queue, but cannot contribute to a completed loop.
             exercisesInLoop = if (completion.amount > 0) exercisesInLoop + 1 else 0
-            expectedIndex = (completedIndex + 1) % exercises.size
-            if (exercisesInLoop == exercises.size) {
+            expectedIndex = (completedIndex + 1) % routine.size
+            currentIndex = nextExerciseIndex(completion.exerciseId)
+            if (exercisesInLoop == routine.size) {
                 completedRotations++
                 if (completionDate == date) rotationsOnDate++
                 exercisesInLoop = 0
             }
         }
 
-    return RotationState(expectedIndex, rotationsOnDate, completedRotations)
+    return RotationState(currentIndex, rotationsOnDate, completedRotations)
 }
