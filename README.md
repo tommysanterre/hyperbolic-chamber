@@ -52,22 +52,24 @@ On launch, the app checks the public GitHub Releases API and shows a dismissible
 
 ### Publish a release
 
-Release by tagging the merged commit and pushing that tag. After merging the changes, update your local `main` and choose a new, unused `v`-prefixed version (the example below assumes `v0.3.9` is unused):
+Every push to `main`, including a merged pull request, automatically publishes a release of the pushed commit. The Android workflow selects the next patch version after the highest stable `vMAJOR.MINOR.PATCH` tag (for example, `v0.3.13` becomes `v0.3.14`), runs unit tests, builds and verifies the signed APK, then pushes the tag and publishes the release. Failed tests or signing checks prevent tagging and publication. Release runs queue sequentially, with room for up to 100 pending runs, so nearby pushes do not compete for the same version.
+
+No extra access token or release secret is needed: the workflow uses its built-in `GITHUB_TOKEN` with write permission only in the release job. A tag pushed with that token does not start another workflow; the same run publishes the APK it already verified. Retrying a run reuses any stable version tag already attached to that commit and replaces that release's APK.
+
+To choose a particular version, you can still push a new, unused `v`-prefixed tag with your authenticated Git connection. After updating your local `main`, choose an unused version (replace `v0.4.0` below if it is already taken):
 
 ```sh
 git switch main
 git pull --ff-only origin main
-git tag v0.3.9
-git push origin v0.3.9
+git tag v0.4.0
+git push origin v0.4.0
 ```
 
-To release a specific commit, use `git tag v0.3.9 <commit-sha>` instead. The tagged commit must contain the release workflow. Keep the existing release workflow unchanged; do not create a temporary release branch or alter its triggers to publish a release. If the available connection cannot push tags, report that limitation and provide the tag-and-push commands.
-
-Creating a release manually or creating a tag from an Action with `GITHUB_TOKEN` does not trigger the tag-push build. Push the tag using your authenticated Git connection, then let the existing workflow publish the release.
+To release a specific commit, use `git tag v0.4.0 <commit-sha>` instead. The tagged commit must contain the release workflow. If the available connection cannot push tags, report that limitation and provide the tag-and-push commands. Manual version tags are optional; merging to `main` already starts an automatic release.
 
 Pushing the tag automatically runs unit tests, builds and verifies the signed APK, and publishes a [GitHub Release](https://github.com/tommysanterre/hyperbolic-chamber/releases) with generated release notes and a versioned APK such as `Hyperbolic-Time-Chamber-v0.3.11.apk` under **Assets**. The Android version name comes from the tag without the leading `v` (for example, `0.3.11`). Actions does the build automatically; downloading happens directly from Releases.
 
-Builds on `main` and manual workflow runs continue to provide the **hyperbolic-update** Actions artifact without publishing a release.
+Builds on `main`, pushed version tags, and manual workflow runs also provide the **hyperbolic-update** Actions artifact. Manual workflow runs publish only that artifact; pull requests run tests without publishing an APK or release. Confirm the workflow passed and the release contains its versioned APK before treating a release as complete.
 
 ### Signing setup
 
