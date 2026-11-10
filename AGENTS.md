@@ -2,9 +2,8 @@
 
 ## Releases
 
-- Release by tagging the merged commit and pushing a new, unused `v`-prefixed version tag with an authenticated Git connection.
-- Follow the commands in README.md under "Publish a release".
-- Let the existing `.github/workflows/android.yml` tag-push workflow test, build, verify the signed APK, and publish the GitHub Release.
-- Do not create a temporary release branch, change workflow triggers, or manually publish a release as a substitute for pushing a tag.
-- If the available tools cannot push tags, explain the limitation and provide the exact tag-and-push commands.
+- Pushes to `main` automatically release the pushed commit through `.github/workflows/android.yml`: select the next patch version, test, build, verify the signed APK, push its tag, and publish the GitHub Release.
+- Follow README.md under "Publish a release" for automatic releases and optional manual version tags.
+- Keep release publication in the Android workflow, using the existing signing key. PRs and manual workflow runs must not publish releases.
+- For a manual version tag, use a new, unused `v`-prefixed version and push it with authenticated Git. If tools cannot push tags, provide the exact commands.
 - Before reporting success, verify that the workflow passed and the published release contains its versioned APK.
