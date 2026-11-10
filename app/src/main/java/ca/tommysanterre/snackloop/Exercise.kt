@@ -13,7 +13,7 @@ data class Exercise(
 
 fun Exercise.recordingAmounts(): List<Int> = listOf(0) + amounts
 
-const val CURRENT_ROUTINE_VERSION = 2
+const val CURRENT_ROUTINE_VERSION = 3
 
 fun UnitType.inputLabel() = when (this) {
     UnitType.REPS -> "Reps completed"
@@ -41,8 +41,8 @@ internal val legacyExercises = listOf(
     Exercise("hip_flexor", "Hip-flexor stretch", "30 seconds per side", UnitType.SECONDS_PER_SIDE, "From a half-kneeling position, gently move your hips forward until you feel a stretch at the front of the trailing hip.")
 )
 
-// Retired movements remain available for displaying saved history in its original units.
-val exercises = listOf(
+// Preserve each published routine so saved names, units and earned loops stay intact.
+internal val versionTwoExercises = listOf(
     legacyExercises.first { it.id == "pushups" }.copy(amounts = (5..10).toList()),
     legacyExercises.first { it.id == "squats" }.copy(amounts = (10..15).toList()),
     Exercise(
@@ -75,11 +75,35 @@ val exercises = listOf(
     )
 )
 
+val exercises = versionTwoExercises.map { exercise ->
+    when (exercise.id) {
+        "pushups" -> Exercise(
+            "knee_pushups", "Knee push-ups", "3–8 reps", UnitType.REPS,
+            "Place your hands slightly wider than shoulder-width and rest both knees on the floor. Keep a straight line from shoulders through hips to knees. Lower your chest with elbows angled back, then press up without letting your hips sag. Stop before your form breaks; record however many clean reps you complete.",
+            (1..8).toList()
+        )
+        "ring_hamstring_curls" -> Exercise(
+            "heel_dig_bridges", "Heel-dig bridges", "5–8 reps", UnitType.REPS,
+            "Lie on your back with knees bent and heels on the floor, toes lifted. Keep your arms beside you. Press both heels down and lift your hips until shoulders, hips and knees form a line, without arching your lower back. Lower slowly. Start with heels closer to your hips; move them a little farther away as this becomes easy. No rings or height adjustments needed.",
+            (1..8).toList()
+        )
+        "pike_pushups" -> Exercise(
+            "bear_plank", "Bear plank hold", "5–15 seconds", UnitType.SECONDS,
+            "Start on hands and knees, wrists under shoulders and knees under hips. Tuck your toes, press the floor away and lift your knees just a few centimetres. Keep your back level, hips low and knees bent; no A-frame position needed. Breathe normally and lower your knees before your form breaks. Begin with a short hold.",
+            (1..15).toList()
+        )
+        else -> exercise
+    }
+}
+
 fun exerciseForId(id: String): Exercise? =
-    exercises.firstOrNull { it.id == id } ?: legacyExercises.firstOrNull { it.id == id }
+    exercises.firstOrNull { it.id == id }
+        ?: versionTwoExercises.firstOrNull { it.id == id }
+        ?: legacyExercises.firstOrNull { it.id == id }
 
 internal fun exercisesForRoutine(version: Int): List<Exercise> = when (version) {
     1 -> legacyExercises
+    2 -> versionTwoExercises
     CURRENT_ROUTINE_VERSION -> exercises
     else -> emptyList()
 }
@@ -88,7 +112,9 @@ internal fun nextExerciseIndex(exerciseId: String): Int {
     val nextId = when (exerciseId) {
         "deep_squat" -> "pullups"
         "dead_hang" -> "single_leg_rdl"
-        "hip_flexor" -> "pushups"
+        "hip_flexor", "pike_pushups" -> "knee_pushups"
+        "pushups" -> "squats"
+        "ring_hamstring_curls" -> "bear_plank"
         else -> null
     }
     return if (nextId != null) exercises.indexOfFirst { it.id == nextId }
