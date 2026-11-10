@@ -6,7 +6,7 @@ The active ten-movement routine uses only Saiyans. Adult Goku and Vegeta each de
 
 | Character | Movement | Base artwork | Super Saiyan artwork |
 | --- | --- | --- | --- |
-| Goku | Push-ups | [movement_pushups.png](../app/src/main/res/drawable-nodpi/movement_pushups.png) | [movement_pushups_ssj.png](../app/src/main/res/drawable-nodpi/movement_pushups_ssj.png) |
+| Goku | Knee push-ups | [movement_knee_pushups.png](../app/src/main/res/drawable-nodpi/movement_knee_pushups.png) | [movement_knee_pushups_ssj.png](../app/src/main/res/drawable-nodpi/movement_knee_pushups_ssj.png) |
 | Vegeta | Squats | [movement_squats.png](../app/src/main/res/drawable-nodpi/movement_squats.png) | [movement_squats_ssj.png](../app/src/main/res/drawable-nodpi/movement_squats_ssj.png) |
 | Gohan | Three-point bridge | [movement_three_point_bridge.png](../app/src/main/res/drawable-nodpi/movement_three_point_bridge.png) | [movement_three_point_bridge_ssj.png](../app/src/main/res/drawable-nodpi/movement_three_point_bridge_ssj.png) |
 | Gohan | Chin-ups | [movement_pullups.png](../app/src/main/res/drawable-nodpi/movement_pullups.png) | [movement_pullups_ssj.png](../app/src/main/res/drawable-nodpi/movement_pullups_ssj.png) |
@@ -14,14 +14,16 @@ The active ten-movement routine uses only Saiyans. Adult Goku and Vegeta each de
 | Vegeta | Tuck L-sit | [movement_tuck_l_sit.png](../app/src/main/res/drawable-nodpi/movement_tuck_l_sit.png) | [movement_tuck_l_sit_ssj.png](../app/src/main/res/drawable-nodpi/movement_tuck_l_sit_ssj.png) |
 | Vegeta | Reverse lunges | [movement_reverse_lunges.png](../app/src/main/res/drawable-nodpi/movement_reverse_lunges.png) | [movement_reverse_lunges_ssj.png](../app/src/main/res/drawable-nodpi/movement_reverse_lunges_ssj.png) |
 | Trunks | Ring rows | [movement_ring_rows.png](../app/src/main/res/drawable-nodpi/movement_ring_rows.png) | [movement_ring_rows_ssj.png](../app/src/main/res/drawable-nodpi/movement_ring_rows_ssj.png) |
-| Trunks | Ring hamstring curls | [movement_ring_hamstring_curls.png](../app/src/main/res/drawable-nodpi/movement_ring_hamstring_curls.png) | [movement_ring_hamstring_curls_ssj.png](../app/src/main/res/drawable-nodpi/movement_ring_hamstring_curls_ssj.png) |
-| Goku | Pike push-ups | [movement_pike_pushups.png](../app/src/main/res/drawable-nodpi/movement_pike_pushups.png) | [movement_pike_pushups_ssj.png](../app/src/main/res/drawable-nodpi/movement_pike_pushups_ssj.png) |
+| Trunks | Heel-dig bridges | [movement_heel_dig_bridges.png](../app/src/main/res/drawable-nodpi/movement_heel_dig_bridges.png) | [movement_heel_dig_bridges_ssj.png](../app/src/main/res/drawable-nodpi/movement_heel_dig_bridges_ssj.png) |
+| Goku | Bear plank hold | [movement_bear_plank.png](../app/src/main/res/drawable-nodpi/movement_bear_plank.png) | [movement_bear_plank_ssj.png](../app/src/main/res/drawable-nodpi/movement_bear_plank_ssj.png) |
 
-All assets are saved under `app/src/main/res/drawable-nodpi/`. The existing Goku push-up and Vegeta squat illustrations, including their Super Saiyan forms, were reused. The other sixteen assets were edited with the **built-in imagegen tool**. Start and end poses occupy the left and right panels of each opaque image. Character identity, exercise form, equipment contacts, panel cropping and transformation were visually reviewed before integration.
+All assets are saved under `app/src/main/res/drawable-nodpi/`. Routine 3 adds six illustrations for knee push-ups, heel-dig bridges and bear plank holds, edited with the **built-in imagegen tool**. Seven movements retain their existing pairs of illustrations. Older artwork remains available for retired movements. Start and end poses occupy the left and right panels of each opaque image. For the timed bear plank, END shows the position to hold. Character identity, exercise form, equipment contacts, panel cropping and transformation were visually reviewed before integration.
 
 The edit targets were the previous movement illustrations. Original adult Goku, Vegeta, Gohan and Future Trunks artwork supplied the character references. The supported deadlift and reverse lunge illustrations were subsequently edited in both forms to replace the child figures with adult Goku and Vegeta, respectively. Reference filenames below identify the inputs as they existed before this replacement.
 
 ## Generation prompts
+
+The six new routine 3 assets and their exact prompts are documented in [adapted-routine-artwork.md](adapted-routine-artwork.md). The prompts below document the retained and historical assets.
 
 ### movement_pike_pushups.png
 

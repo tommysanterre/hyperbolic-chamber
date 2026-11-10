@@ -4,7 +4,7 @@ Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a
 
 ## Rotation
 
-1. Push-ups — 5–10 reps
+1. Knee push-ups — 3–8 reps
 2. Squats — 10–15 reps
 3. Three-point bridge — 3–5 reps per side
 4. Chin-ups — 1–2 reps
@@ -12,8 +12,10 @@ Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a
 6. Tuck L-sit — 5–15 seconds
 7. Reverse lunges — 5 reps per side
 8. Ring rows — 5–10 reps
-9. Ring hamstring curls — 5–8 reps
-10. Pike push-ups — 3–6 reps
+9. Heel-dig bridges — 5–8 reps
+10. Bear plank hold — 5–15 seconds
+
+These variations keep setup quick and match the current starting level. Heel-dig bridges use the floor, so the rings can stay at rowing height. Bear planks use bent knees under the hips and a level back, avoiding the pike A-frame; they provide shoulder support and core practice rather than an overhead press. Knee push-ups keep a straight line from shoulders to knees. Targets are goals: the three adapted movements let you record from 1 rep or 1 second, so stop before form breaks and record the amount actually completed.
 
 Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days: at 4–6 movements per day, work through the routine over roughly 2 days and resume wherever you stopped. There is no daily completion requirement or limit. Dead hangs, hip-flexor stretches and calf raises can be done as optional extras outside the tracked rotation.
 
@@ -21,16 +23,20 @@ A workout day runs from **4 AM to 4 AM in your local time**. The existing daily 
 
 Updating from the previous eight-movement routine keeps saved history, its original movement names and units, and previously earned loop totals. New records use the ten-movement routine; a partial old loop cannot be combined with the new routine to earn a loop. Retired movements are no longer queued. The queue resumes after the last saved movement, using the next appropriate movement in the new routine.
 
+The adapted routine is version 3. Records from version 2 retain Push-ups, Ring hamstring curls and Pike push-ups as their original names and rep units. New records use separate movement IDs for Knee push-ups, Heel-dig bridges and Bear plank hold. Completed loops from both earlier routines remain counted, and the queue resumes at the corresponding next slot; partial loops cannot span routine versions. No database reset is needed.
+
+Exercise references: [ACE knee push-up technique](https://www.acefitness.org/resources/everyone/exercise-library/13/bent-knee-push-up/), [heel-supported hamstring bridge](https://holisticphysiofitness.com.au/exercise/hamstring-bridge-with-heels-strength/), and [University of Portsmouth plank variations](https://sport.port.ac.uk/news-events-and-blogs/6-plank-variations-to-strengthen-your-core). The short targets above are this app's starting points.
+
 ## Movement illustrations
 
 The ten movements use four adult Saiyans, with character totals differing by at most one:
 
 | Character | Movements |
 | --- | --- |
-| Goku | Push-ups; supported single-leg Romanian deadlift; pike push-ups |
+| Goku | Knee push-ups; supported single-leg Romanian deadlift; bear plank hold |
 | Vegeta | Squats; tuck L-sit; reverse lunges |
 | Gohan | Three-point bridge; chin-ups |
-| Trunks | Ring rows; ring hamstring curls |
+| Trunks | Ring rows; heel-dig bridges |
 
 Every movement has base-form and Super Saiyan artwork. The existing transformation unlock after two completed loops applies to all ten movements. Goku and Vegeta demonstrate three movements each; Gohan and adult Future Trunks demonstrate two each. All figures have adult proportions. The artwork assets, references and generation prompts are documented in [routine-artwork.md](docs/routine-artwork.md).
 

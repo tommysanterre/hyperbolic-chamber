@@ -11,7 +11,7 @@ class RotationLogicTest {
     private val today = LocalDate.of(2026, 9, 30)
 
     @Test
-    fun `exercise advances in order and wraps after pike pushups`() {
+    fun `exercise advances in order and wraps after bear plank`() {
         assertEquals(0, state(emptyList()).currentIndex)
 
         val history = mutableListOf<Completion>()
@@ -169,7 +169,7 @@ class RotationLogicTest {
     fun `exercise metadata preserves reps seconds and per-side wording`() {
         assertEquals(
             listOf(
-                "pushups",
+                "knee_pushups",
                 "squats",
                 "three_point_bridge",
                 "pullups",
@@ -177,8 +177,8 @@ class RotationLogicTest {
                 "tuck_l_sit",
                 "reverse_lunges",
                 "ring_rows",
-                "ring_hamstring_curls",
-                "pike_pushups"
+                "heel_dig_bridges",
+                "bear_plank"
             ),
             exercises.map { it.id }
         )
@@ -193,13 +193,13 @@ class RotationLogicTest {
                 UnitType.REPS_PER_SIDE,
                 UnitType.REPS,
                 UnitType.REPS,
-                UnitType.REPS
+                UnitType.SECONDS
             ),
             exercises.map { it.unit }
         )
         assertEquals(
             listOf(
-                "5–10 reps",
+                "3–8 reps",
                 "10–15 reps",
                 "3–5 reps per side",
                 "1–2 reps",
@@ -208,7 +208,7 @@ class RotationLogicTest {
                 "5 reps per side",
                 "5–10 reps",
                 "5–8 reps",
-                "3–6 reps"
+                "5–15 seconds"
             ),
             exercises.map { it.target }
         )
@@ -273,7 +273,7 @@ class RotationLogicTest {
     fun `upgrade resumes after every legacy movement and preserves undo`() {
         val expectedNextIds = listOf(
             "squats", "three_point_bridge", "pullups", "single_leg_rdl",
-            "single_leg_rdl", "ring_rows", "ring_hamstring_curls", "pushups"
+            "single_leg_rdl", "ring_rows", "heel_dig_bridges", "knee_pushups"
         )
         legacyExercises.forEachIndexed { index, exercise ->
             val legacy = listOf(completion(exercise, 0).copy(routineVersion = 1))
@@ -310,6 +310,54 @@ class RotationLogicTest {
         assertEquals(0, state(legacy).currentIndex)
         assertEquals(0, state(legacy.take(5)).completedRotations)
         assertEquals("single_leg_rdl", exercises[state(legacy.take(5)).currentIndex].id)
+    }
+
+    @Test
+    fun `version two loops keep their totals and every old position resumes correctly`() {
+        val expectedNextIds = listOf(
+            "squats", "three_point_bridge", "pullups", "single_leg_rdl", "tuck_l_sit",
+            "reverse_lunges", "ring_rows", "heel_dig_bridges", "bear_plank", "knee_pushups"
+        )
+        val oldLoop = versionTwoExercises.mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 2)
+        }
+        oldLoop.indices.forEach { index ->
+            val history = oldLoop.take(index + 1)
+            val next = exercises[state(history).currentIndex]
+            assertEquals(expectedNextIds[index], next.id)
+            val updated = history + completion(next, index + 1)
+            assertEquals((exercises.indexOf(next) + 1) % exercises.size, state(updated).currentIndex)
+            assertEquals(exercises.indexOf(next), state(updated.dropLast(1)).currentIndex)
+        }
+        assertEquals(1, state(oldLoop).completedRotations)
+        val newLoop = exercises.mapIndexed { index, exercise ->
+            completion(exercise, index + oldLoop.size)
+        }
+        assertEquals(2, state((oldLoop + newLoop).reversed()).completedRotations)
+        assertEquals(1, state(oldLoop + newLoop.dropLast(1)).completedRotations)
+    }
+
+    @Test
+    fun `partial version two loop cannot combine with adapted movements`() {
+        val old = versionTwoExercises.take(8).mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 2)
+        }
+        val current = exercises.indices.map { offset ->
+            completion(exercises[(8 + offset) % exercises.size], offset + old.size)
+        }
+        assertEquals(0, state(old + current.take(2)).completedRotations)
+        assertEquals(0, state(old + current.dropLast(1)).completedRotations)
+        assertEquals(1, state(old + current).completedRotations)
+        assertEquals(8, state(old + current).currentIndex)
+    }
+
+    @Test
+    fun `skipped old ring curl resumes at bear plank without earning a loop`() {
+        val old = versionTwoExercises.take(9).mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 2, amount = if (index == 8) 0 else 5)
+        }
+        assertEquals("bear_plank", exercises[state(old).currentIndex].id)
+        assertEquals(0, state(old).completedRotations)
     }
 
     private fun state(history: List<Completion>) = rotationState(history, today, zone)
