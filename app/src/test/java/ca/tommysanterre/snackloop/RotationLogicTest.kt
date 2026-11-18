@@ -172,7 +172,7 @@ class RotationLogicTest {
                 "knee_pushups",
                 "squats",
                 "three_point_bridge",
-                "pullups",
+                "scapular_pullups",
                 "single_leg_rdl",
                 "tuck_l_sit",
                 "reverse_lunges",
@@ -202,7 +202,7 @@ class RotationLogicTest {
                 "3–8 reps",
                 "10–15 reps",
                 "3–5 reps per side",
-                "1–2 reps",
+                "3–5 reps",
                 "5–8 reps per side",
                 "5–15 seconds",
                 "5 reps per side",
@@ -272,7 +272,7 @@ class RotationLogicTest {
     @Test
     fun `upgrade resumes after every legacy movement and preserves undo`() {
         val expectedNextIds = listOf(
-            "squats", "three_point_bridge", "pullups", "single_leg_rdl",
+            "squats", "three_point_bridge", "scapular_pullups", "single_leg_rdl",
             "single_leg_rdl", "ring_rows", "heel_dig_bridges", "knee_pushups"
         )
         legacyExercises.forEachIndexed { index, exercise ->
@@ -315,7 +315,7 @@ class RotationLogicTest {
     @Test
     fun `version two loops keep their totals and every old position resumes correctly`() {
         val expectedNextIds = listOf(
-            "squats", "three_point_bridge", "pullups", "single_leg_rdl", "tuck_l_sit",
+            "squats", "three_point_bridge", "scapular_pullups", "single_leg_rdl", "tuck_l_sit",
             "reverse_lunges", "ring_rows", "heel_dig_bridges", "bear_plank", "knee_pushups"
         )
         val oldLoop = versionTwoExercises.mapIndexed { index, exercise ->
@@ -357,6 +357,53 @@ class RotationLogicTest {
             completion(exercise, index).copy(routineVersion = 2, amount = if (index == 8) 0 else 5)
         }
         assertEquals("bear_plank", exercises[state(old).currentIndex].id)
+        assertEquals(0, state(old).completedRotations)
+    }
+
+    @Test
+    fun `version three loops and every queue position survive scapular substitution`() {
+        val oldLoop = versionThreeExercises.mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 3)
+        }
+        val expectedNextIds = exercises.drop(1).map { it.id } + exercises.first().id
+        oldLoop.indices.forEach { index ->
+            val history = oldLoop.take(index + 1)
+            val next = exercises[state(history).currentIndex]
+            assertEquals(expectedNextIds[index], next.id)
+            val updated = history + completion(next, index + 1)
+            assertEquals((exercises.indexOf(next) + 1) % exercises.size, state(updated).currentIndex)
+            assertEquals(exercises.indexOf(next), state(updated.dropLast(1)).currentIndex)
+        }
+        assertEquals(1, state(oldLoop).completedRotations)
+        val newLoop = exercises.mapIndexed { index, exercise ->
+            completion(exercise, index + oldLoop.size)
+        }
+        assertEquals(2, state((oldLoop + newLoop).reversed()).completedRotations)
+        assertEquals(1, state(oldLoop + newLoop.dropLast(1)).completedRotations)
+    }
+
+    @Test
+    fun `partial chin-up routine cannot complete a scapular routine loop`() {
+        val old = versionThreeExercises.take(3).mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 3)
+        }
+        val current = exercises.indices.map { offset ->
+            completion(exercises[(3 + offset) % exercises.size], offset + old.size)
+        }
+        assertEquals("scapular_pullups", exercises[state(old).currentIndex].id)
+        assertEquals(0, state(old + current.take(7)).completedRotations)
+        assertEquals(0, state(old + current.dropLast(1)).completedRotations)
+        assertEquals(1, state(old + current).completedRotations)
+        assertEquals(3, state(old + current).currentIndex)
+    }
+
+    @Test
+    fun `skipped old chin-up advances to deadlift and undo restores scapular slot`() {
+        val old = versionThreeExercises.take(4).mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 3, amount = if (index == 3) 0 else 5)
+        }
+        assertEquals("single_leg_rdl", exercises[state(old).currentIndex].id)
+        assertEquals("scapular_pullups", exercises[state(old.dropLast(1)).currentIndex].id)
         assertEquals(0, state(old).completedRotations)
     }
 

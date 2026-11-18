@@ -11,7 +11,7 @@ class ExerciseTest {
             "knee_pushups" to (0..8).toList(),
             "squats" to listOf(0, 10, 11, 12, 13, 14, 15),
             "three_point_bridge" to listOf(0, 3, 4, 5),
-            "pullups" to listOf(0, 1, 2),
+            "scapular_pullups" to (0..5).toList(),
             "single_leg_rdl" to listOf(0, 5, 6, 7, 8),
             "tuck_l_sit" to listOf(0, 5, 10, 15),
             "reverse_lunges" to listOf(0, 5),
@@ -30,7 +30,8 @@ class ExerciseTest {
             "hip_flexor" to ("Hip-flexor stretch" to "seconds per side"),
             "pushups" to ("Push-ups" to "reps"),
             "ring_hamstring_curls" to ("Ring hamstring curls" to "reps"),
-            "pike_pushups" to ("Pike push-ups" to "reps")
+            "pike_pushups" to ("Pike push-ups" to "reps"),
+            "pullups" to ("Chin-ups" to "reps")
         )
         expected.forEach { (id, details) ->
             val exercise = exerciseForId(id)!!
@@ -43,6 +44,6 @@ class ExerciseTest {
 
     @Test
     fun `new completions use the current routine version`() {
-        assertEquals(3, Completion(exerciseId = "knee_pushups", amount = 3).routineVersion)
+        assertEquals(4, Completion(exerciseId = "scapular_pullups", amount = 3).routineVersion)
     }
 }

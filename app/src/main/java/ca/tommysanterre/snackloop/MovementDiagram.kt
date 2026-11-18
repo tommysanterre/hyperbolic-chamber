@@ -33,6 +33,7 @@ internal fun artworkFor(id: String, superSaiyan: Boolean = false): Int = when {
     superSaiyan && id == "knee_pushups" -> R.drawable.movement_knee_pushups_ssj
     superSaiyan && id == "heel_dig_bridges" -> R.drawable.movement_heel_dig_bridges_ssj
     superSaiyan && id == "bear_plank" -> R.drawable.movement_bear_plank_ssj
+    superSaiyan && id == "scapular_pullups" -> R.drawable.movement_scapular_pullups_ssj
     superSaiyan && id == "pushups" -> R.drawable.movement_pushups_ssj
     superSaiyan && id == "squats" -> R.drawable.movement_squats_ssj
     superSaiyan && id == "three_point_bridge" -> R.drawable.movement_three_point_bridge_ssj
@@ -48,6 +49,7 @@ internal fun artworkFor(id: String, superSaiyan: Boolean = false): Int = when {
     id == "knee_pushups" -> R.drawable.movement_knee_pushups
     id == "heel_dig_bridges" -> R.drawable.movement_heel_dig_bridges
     id == "bear_plank" -> R.drawable.movement_bear_plank
+    id == "scapular_pullups" -> R.drawable.movement_scapular_pullups
     id == "pushups" -> R.drawable.movement_pushups
     id == "squats" -> R.drawable.movement_squats
     id == "deep_squat" -> R.drawable.movement_deep_squat
