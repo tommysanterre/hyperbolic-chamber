@@ -9,7 +9,7 @@ The active ten-movement routine uses only Saiyans. Adult Goku and Vegeta each de
 | Goku | Knee push-ups | [movement_knee_pushups.png](../app/src/main/res/drawable-nodpi/movement_knee_pushups.png) | [movement_knee_pushups_ssj.png](../app/src/main/res/drawable-nodpi/movement_knee_pushups_ssj.png) |
 | Vegeta | Squats | [movement_squats.png](../app/src/main/res/drawable-nodpi/movement_squats.png) | [movement_squats_ssj.png](../app/src/main/res/drawable-nodpi/movement_squats_ssj.png) |
 | Gohan | Three-point bridge | [movement_three_point_bridge.png](../app/src/main/res/drawable-nodpi/movement_three_point_bridge.png) | [movement_three_point_bridge_ssj.png](../app/src/main/res/drawable-nodpi/movement_three_point_bridge_ssj.png) |
-| Gohan | Chin-ups | [movement_pullups.png](../app/src/main/res/drawable-nodpi/movement_pullups.png) | [movement_pullups_ssj.png](../app/src/main/res/drawable-nodpi/movement_pullups_ssj.png) |
+| Gohan | Scapular pull-ups | [movement_scapular_pullups.png](../app/src/main/res/drawable-nodpi/movement_scapular_pullups.png) | [movement_scapular_pullups_ssj.png](../app/src/main/res/drawable-nodpi/movement_scapular_pullups_ssj.png) |
 | Goku | Supported single-leg Romanian deadlift | [movement_single_leg_rdl.png](../app/src/main/res/drawable-nodpi/movement_single_leg_rdl.png) | [movement_single_leg_rdl_ssj.png](../app/src/main/res/drawable-nodpi/movement_single_leg_rdl_ssj.png) |
 | Vegeta | Tuck L-sit | [movement_tuck_l_sit.png](../app/src/main/res/drawable-nodpi/movement_tuck_l_sit.png) | [movement_tuck_l_sit_ssj.png](../app/src/main/res/drawable-nodpi/movement_tuck_l_sit_ssj.png) |
 | Vegeta | Reverse lunges | [movement_reverse_lunges.png](../app/src/main/res/drawable-nodpi/movement_reverse_lunges.png) | [movement_reverse_lunges_ssj.png](../app/src/main/res/drawable-nodpi/movement_reverse_lunges_ssj.png) |
@@ -72,6 +72,8 @@ Saved to `app/src/main/res/drawable-nodpi/movement_three_point_bridge_ssj.png`.
 Inputs: `movement_three_point_bridge.png`, `movement_deep_squat_ssj.png`.
 
 Use case: precise-object-edit. Asset type: paired start/end exercise artwork for Android app. Image 1 is EDIT TARGET for three_point_bridge. Image 2 is a CHARACTER/CLOTHING REFERENCE ONLY. Replace the figure in BOTH PANELS with Super Saiyan Gohan. Character: Gohan in purple sleeveless gi, red sash and red wristbands, olive boots with dark toes, natural human skin; black spiky Gohan hair with a front bang. TRANSFORM BOTH figures: upright GOLDEN Super Saiyan hair, teal eyes and a restrained golden aura. Preserve the distinctive character face and outfit. Remove all green skin, Namekian ears, turban, purple Piccolo costume or Krillin forehead dots. Preserve the exercise in image 1, NOT the exercise in image 2. Three-point bridge: both feet and one hand planted; left hips low in crab preparation, right hips lifted and free arm reaching overhead. Keep the same hand and foot contacts, equipment, accurate joint positions, white background and light ground shadows, clean anime linework and cel shading. Landscape two EQUAL side-by-side panels with divider exactly at center. One complete full-body figure per half, safely inside its half. No text, logos, watermarks, extra characters or extra limbs.
+
+The chin-up prompts below describe the preserved historical assets. Routine 4 uses [scapular pull-up artwork and prompts](scapular-pullup-artwork.md).
 
 ### movement_pullups.png
 

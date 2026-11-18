@@ -7,7 +7,7 @@ Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a
 1. Knee push-ups — 3–8 reps
 2. Squats — 10–15 reps
 3. Three-point bridge — 3–5 reps per side
-4. Chin-ups — 1–2 reps
+4. Scapular pull-ups — 3–5 reps
 5. Supported single-leg Romanian deadlift — 5–8 reps per side
 6. Tuck L-sit — 5–15 seconds
 7. Reverse lunges — 5 reps per side
@@ -15,7 +15,7 @@ Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a
 9. Heel-dig bridges — 5–8 reps
 10. Bear plank hold — 5–15 seconds
 
-These variations keep setup quick and match the current starting level. Heel-dig bridges use the floor, so the rings can stay at rowing height. Bear planks use bent knees under the hips and a level back, avoiding the pike A-frame; they provide shoulder support and core practice rather than an overhead press. Knee push-ups keep a straight line from shoulders to knees. Targets are goals: the three adapted movements let you record from 1 rep or 1 second, so stop before form breaks and record the amount actually completed.
+These variations keep setup quick and match the current starting level. Heel-dig bridges use the floor, so the rings can stay at rowing height. Bear planks use bent knees under the hips and a level back, avoiding the pike A-frame; they provide shoulder support and core practice rather than an overhead press. Knee push-ups keep a straight line from shoulders to knees. Scapular pull-ups use an overhand grip and straight elbows: draw the shoulders down away from the ears to lift the body a few centimetres, pause briefly, then lower slowly without swinging. Use light foot support on a stable step if needed. Ring rows remain the routine's main bent-arm pulling movement. Targets are goals: knee push-ups, scapular pull-ups, heel-dig bridges and bear plank holds let you record from 1 rep or 1 second, so stop before form breaks and record the amount actually completed.
 
 Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days: at 4–6 movements per day, work through the routine over roughly 2 days and resume wherever you stopped. There is no daily completion requirement or limit. Dead hangs, hip-flexor stretches and calf raises can be done as optional extras outside the tracked rotation.
 
@@ -23,9 +23,15 @@ A workout day runs from **4 AM to 4 AM in your local time**. The existing daily 
 
 Updating from the previous eight-movement routine keeps saved history, its original movement names and units, and previously earned loop totals. New records use the ten-movement routine; a partial old loop cannot be combined with the new routine to earn a loop. Retired movements are no longer queued. The queue resumes after the last saved movement, using the next appropriate movement in the new routine.
 
-The adapted routine is version 3. Records from version 2 retain Push-ups, Ring hamstring curls and Pike push-ups as their original names and rep units. New records use separate movement IDs for Knee push-ups, Heel-dig bridges and Bear plank hold. Completed loops from both earlier routines remain counted, and the queue resumes at the corresponding next slot; partial loops cannot span routine versions. No database reset is needed.
+The current routine is version 4. Version 3 introduced Knee push-ups, Heel-dig bridges and Bear plank hold with separate movement IDs; records from version 2 retain Push-ups, Ring hamstring curls and Pike push-ups as their original names and rep units. Version 4 replaces Chin-ups with Scapular pull-ups using a new movement ID, so earlier chin-up records keep their original name and amounts. Completed loops from all earlier routines remain counted, and the queue resumes at the corresponding next slot; partial loops cannot span routine versions. No database reset is needed.
 
-Exercise references: [ACE knee push-up technique](https://www.acefitness.org/resources/everyone/exercise-library/13/bent-knee-push-up/), [heel-supported hamstring bridge](https://holisticphysiofitness.com.au/exercise/hamstring-bridge-with-heels-strength/), and [University of Portsmouth plank variations](https://sport.port.ac.uk/news-events-and-blogs/6-plank-variations-to-strengthen-your-core). The short targets above are this app's starting points.
+Exercise references: [ACE knee push-up technique](https://www.acefitness.org/resources/everyone/exercise-library/13/bent-knee-push-up/), [heel-supported hamstring bridge](https://holisticphysiofitness.com.au/exercise/hamstring-bridge-with-heels-strength/), [University of Portsmouth plank variations](https://sport.port.ac.uk/news-events-and-blogs/6-plank-variations-to-strengthen-your-core), and [Crossover Health pull-up progressions](https://be-well.crossoverhealth.com/wp-content/uploads/sites/2/2022/08/Pull-up-Progression.pdf). The short targets above are this app's starting points.
+
+## Export history for a difficulty review
+
+Open **History → Export history**, then choose **Share file** or **Save file**. The app creates a UTF-8 `.txt` report that you can attach in a chat. Exporting works offline and includes the current routine, targets, available recording amounts and movement cues; a summary of the last 28 workout days; and the complete saved log with timestamps, amounts, skips and routine versions. Recent averages exclude skips and keep earlier exercise variations separate. Per-side amounts stay per side. Undone entries are absent because they were removed from history.
+
+When sharing the report to adjust difficulty, also describe how hard each exercise felt, roughly how many more clean reps or seconds you could have done, any assistance or setup changes, and any discomfort. The app does not record those details, and reaching a target or recording limit alone does not establish readiness to progress. Workout dates use the export device's current time zone and the app's 4 AM boundary. Sharing opens Android's share sheet; saving opens the system file picker. History remains in the app after either action.
 
 ## Movement illustrations
 
@@ -35,7 +41,7 @@ The ten movements use four adult Saiyans, with character totals differing by at 
 | --- | --- |
 | Goku | Knee push-ups; supported single-leg Romanian deadlift; bear plank hold |
 | Vegeta | Squats; tuck L-sit; reverse lunges |
-| Gohan | Three-point bridge; chin-ups |
+| Gohan | Three-point bridge; scapular pull-ups |
 | Trunks | Ring rows; heel-dig bridges |
 
 Every movement has base-form and Super Saiyan artwork. The existing transformation unlock after two completed loops applies to all ten movements. Goku and Vegeta demonstrate three movements each; Gohan and adult Future Trunks demonstrate two each. All figures have adult proportions. The artwork assets, references and generation prompts are documented in [routine-artwork.md](docs/routine-artwork.md).

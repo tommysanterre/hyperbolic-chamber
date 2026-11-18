@@ -13,7 +13,7 @@ data class Exercise(
 
 fun Exercise.recordingAmounts(): List<Int> = listOf(0) + amounts
 
-const val CURRENT_ROUTINE_VERSION = 3
+const val CURRENT_ROUTINE_VERSION = 4
 
 fun UnitType.inputLabel() = when (this) {
     UnitType.REPS -> "Reps completed"
@@ -75,7 +75,7 @@ internal val versionTwoExercises = listOf(
     )
 )
 
-val exercises = versionTwoExercises.map { exercise ->
+internal val versionThreeExercises = versionTwoExercises.map { exercise ->
     when (exercise.id) {
         "pushups" -> Exercise(
             "knee_pushups", "Knee push-ups", "3–8 reps", UnitType.REPS,
@@ -96,22 +96,35 @@ val exercises = versionTwoExercises.map { exercise ->
     }
 }
 
+val exercises = versionThreeExercises.map { exercise ->
+    when (exercise.id) {
+        "pullups" -> Exercise(
+            "scapular_pullups", "Scapular pull-ups", "3–5 reps", UnitType.REPS,
+            "Grip the bar with palms facing away, about shoulder-width apart. Hang with straight elbows. Keep your elbows straight as you draw your shoulders down away from your ears, lifting your body just a few centimetres. Pause briefly, then return slowly to the relaxed hang without swinging. Keep your feet lightly supported on a stable step if needed. Stop before form breaks and record only clean reps.",
+            (1..5).toList()
+        )
+        else -> exercise
+    }
+}
+
 fun exerciseForId(id: String): Exercise? =
     exercises.firstOrNull { it.id == id }
+        ?: versionThreeExercises.firstOrNull { it.id == id }
         ?: versionTwoExercises.firstOrNull { it.id == id }
         ?: legacyExercises.firstOrNull { it.id == id }
 
 internal fun exercisesForRoutine(version: Int): List<Exercise> = when (version) {
     1 -> legacyExercises
     2 -> versionTwoExercises
+    3 -> versionThreeExercises
     CURRENT_ROUTINE_VERSION -> exercises
     else -> emptyList()
 }
 
 internal fun nextExerciseIndex(exerciseId: String): Int {
     val nextId = when (exerciseId) {
-        "deep_squat" -> "pullups"
-        "dead_hang" -> "single_leg_rdl"
+        "deep_squat" -> "scapular_pullups"
+        "pullups", "dead_hang" -> "single_leg_rdl"
         "hip_flexor", "pike_pushups" -> "knee_pushups"
         "pushups" -> "squats"
         "ring_hamstring_curls" -> "bear_plank"

@@ -18,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
 fun HyperbolicApp(vm: MainViewModel = viewModel()) {
     val context = LocalContext.current
     val state by vm.state.collectAsState()
-    var historyOpen by remember { mutableStateOf(false) }
+    var historyOpen by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val exercise = exercises[state.currentIndex]
     BackHandler(enabled = historyOpen) { historyOpen = false }
@@ -103,7 +104,11 @@ fun HyperbolicApp(vm: MainViewModel = viewModel()) {
             }
         }
     ) { padding ->
-        if (historyOpen) HistoryScreen(state, Modifier.padding(padding))
+        if (historyOpen) HistoryScreen(
+            state,
+            onMessage = { snackbarHostState.showSnackbar(it) },
+            modifier = Modifier.padding(padding)
+        )
         else ExerciseScreen(
             exercise = exercise,
             superSaiyan = state.completedRotations > 1,
@@ -184,16 +189,23 @@ private fun ExerciseScreen(
 }
 
 @Composable
-private fun HistoryScreen(state: UiState, modifier: Modifier = Modifier) {
-    if (state.completions.isEmpty()) Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("No movement snacks yet") }
-    else LazyColumn(modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        items(state.completions, key = { it.id }) { item ->
-            val ex = exerciseForId(item.exerciseId)
-            ListItem(
-                headlineContent = { Text(ex?.name ?: item.exerciseId) },
-                supportingContent = { Text(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(item.completedAt))) },
-                trailingContent = { Text(if (item.amount == 0) "Skipped" else "${item.amount} ${ex?.unit?.historyLabel(item.amount) ?: "units"}") }
-            )
+private fun HistoryScreen(state: UiState, onMessage: suspend (String) -> Unit, modifier: Modifier = Modifier) {
+    Column(modifier.fillMaxSize()) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp), horizontalArrangement = Arrangement.End) {
+            HistoryExportButton(state, onMessage)
+        }
+        if (state.completions.isEmpty()) Box(Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
+            Text(if (state.storageUnavailable) "Saved history couldn't be opened. Try restarting the app." else "No movement snacks yet")
+        }
+        else LazyColumn(Modifier.fillMaxWidth().weight(1f), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            items(state.completions, key = { it.id }) { item ->
+                val ex = exerciseForId(item.exerciseId)
+                ListItem(
+                    headlineContent = { Text(ex?.name ?: item.exerciseId) },
+                    supportingContent = { Text(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(item.completedAt))) },
+                    trailingContent = { Text(if (item.amount == 0) "Skipped" else "${item.amount} ${ex?.unit?.historyLabel(item.amount) ?: "units"}") }
+                )
+            }
         }
     }
 }
