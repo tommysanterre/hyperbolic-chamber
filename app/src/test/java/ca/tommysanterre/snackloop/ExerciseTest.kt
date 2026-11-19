@@ -13,7 +13,7 @@ class ExerciseTest {
             "three_point_bridge" to listOf(0, 3, 4, 5),
             "scapular_pullups" to (0..5).toList(),
             "single_leg_rdl" to listOf(0, 5, 6, 7, 8),
-            "tuck_l_sit" to listOf(0, 5, 10, 15),
+            "tuck_l_sit" to listOf(0, 10, 11, 12, 13, 14, 15),
             "reverse_lunges" to listOf(0, 5),
             "ring_rows" to listOf(0, 5, 6, 7, 8, 9, 10),
             "heel_dig_bridges" to (0..8).toList(),

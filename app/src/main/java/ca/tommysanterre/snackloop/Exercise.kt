@@ -98,6 +98,7 @@ internal val versionThreeExercises = versionTwoExercises.map { exercise ->
 
 val exercises = versionThreeExercises.map { exercise ->
     when (exercise.id) {
+        "tuck_l_sit" -> exercise.copy(amounts = (10..15).toList())
         "pullups" -> Exercise(
             "scapular_pullups", "Scapular pull-ups", "3–5 reps", UnitType.REPS,
             "Grip the bar with palms facing away, about shoulder-width apart. Hang with straight elbows. Keep your elbows straight as you draw your shoulders down away from your ears, lifting your body just a few centimetres. Pause briefly, then return slowly to the relaxed hang without swinging. Keep your feet lightly supported on a stable step if needed. Stop before form breaks and record only clean reps.",
