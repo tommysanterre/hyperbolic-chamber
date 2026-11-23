@@ -111,7 +111,7 @@ fun HyperbolicApp(vm: MainViewModel = viewModel()) {
         )
         else ExerciseScreen(
             exercise = exercise,
-            superSaiyan = state.completedRotations > 1,
+            superSaiyan = state.superSaiyanUnlocked,
             canUndo = state.completions.isNotEmpty() && !state.storageUnavailable,
             storageUnavailable = state.storageUnavailable,
             onComplete = vm::complete,

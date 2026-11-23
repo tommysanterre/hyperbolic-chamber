@@ -77,7 +77,8 @@ class HistoryExportTest {
     fun `report includes routine targets recording limits and missing effort context even without history`() {
         val report = historyExport(emptyList(), now)
 
-        assertTrue(report.contains("| Scapular pull-ups | 3–5 reps | 1, 2, 3, 4, 5 reps; 0 = skip |"))
+        assertTrue(report.contains("| Scapular pull-ups | 3–8 reps | 1, 2, 3, 4, 5, 6, 7, 8 reps; 0 = skip |"))
+        assertTrue(report.contains("| Tuck L-sit | 5–15 seconds | 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 seconds; 0 = skip |"))
         assertTrue(report.contains("| Bear plank hold | 5–15 seconds |"))
         assertTrue(report.contains("how many more clean reps or seconds"))
         assertTrue(report.contains("any assistance, setup changes or discomfort"))

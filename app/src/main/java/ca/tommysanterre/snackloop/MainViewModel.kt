@@ -23,7 +23,9 @@ data class UiState(
     val rotationsToday: Int = 0,
     val completedRotations: Int = 0,
     val storageUnavailable: Boolean = false
-)
+) {
+    val superSaiyanUnlocked: Boolean get() = completedRotations > 0
+}
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val storageUnavailable = MutableStateFlow(false)

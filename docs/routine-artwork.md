@@ -1,6 +1,6 @@
 # Routine artwork
 
-The active ten-movement routine uses only Saiyans. Adult Goku and Vegeta each demonstrate three movements; adult Gohan and Future Trunks each demonstrate two. Character totals differ by at most one, and no child characters are used. Every movement has a base-form PNG and a Super Saiyan PNG; the app's existing unlock after two completed loops selects the transformed set.
+The active ten-movement routine uses only Saiyans. Adult Goku and Vegeta each demonstrate three movements; adult Gohan and Future Trunks each demonstrate two. Character totals differ by at most one, and no child characters are used. Every movement has a base-form PNG and a Super Saiyan PNG. Completing one full loop within a single workout day unlocks the transformed set.
 
 ## Asset assignments
 
