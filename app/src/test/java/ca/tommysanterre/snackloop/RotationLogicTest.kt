@@ -202,7 +202,7 @@ class RotationLogicTest {
                 "3–8 reps",
                 "10–15 reps",
                 "3–5 reps per side",
-                "3–5 reps",
+                "3–8 reps",
                 "5–8 reps per side",
                 "5–15 seconds",
                 "5 reps per side",

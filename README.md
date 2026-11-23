@@ -7,7 +7,7 @@ Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a
 1. Knee push-ups — 3–8 reps
 2. Squats — 10–15 reps
 3. Three-point bridge — 3–5 reps per side
-4. Scapular pull-ups — 3–5 reps
+4. Scapular pull-ups — 3–8 reps
 5. Supported single-leg Romanian deadlift — 5–8 reps per side
 6. Tuck L-sit — 5–15 seconds
 7. Reverse lunges — 5 reps per side
@@ -15,7 +15,7 @@ Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a
 9. Heel-dig bridges — 5–8 reps
 10. Bear plank hold — 5–15 seconds
 
-These variations keep setup quick and match the current starting level. Heel-dig bridges use the floor, so the rings can stay at rowing height. Bear planks use bent knees under the hips and a level back, avoiding the pike A-frame; they provide shoulder support and core practice rather than an overhead press. Knee push-ups keep a straight line from shoulders to knees. Scapular pull-ups use an overhand grip and straight elbows: draw the shoulders down away from the ears to lift the body a few centimetres, pause briefly, then lower slowly without swinging. Use light foot support on a stable step if needed. Ring rows remain the routine's main bent-arm pulling movement. Targets are goals: knee push-ups, scapular pull-ups, heel-dig bridges and bear plank holds let you record from 1 rep or 1 second, so stop before form breaks and record the amount actually completed.
+These variations keep setup quick and match the current starting level. Heel-dig bridges use the floor, so the rings can stay at rowing height. Bear planks use bent knees under the hips and a level back, avoiding the pike A-frame; they provide shoulder support and core practice rather than an overhead press. Knee push-ups keep a straight line from shoulders to knees. Scapular pull-ups use an overhand grip and straight elbows: draw the shoulders down away from the ears to lift the body a few centimetres, pause briefly, then lower slowly without swinging. Use light foot support on a stable step if needed. Ring rows remain the routine's main bent-arm pulling movement. Knee push-ups, scapular pull-ups, heel-dig bridges, tuck L-sits and bear plank holds let you record from 1 rep or 1 second. Stop before form breaks and record the amount you completed.
 
 Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days: at 4–6 movements per day, work through the routine over roughly 2 days and resume wherever you stopped. There is no daily completion requirement or limit. Dead hangs, hip-flexor stretches and calf raises can be done as optional extras outside the tracked rotation.
 
@@ -44,7 +44,7 @@ The ten movements use four adult Saiyans, with character totals differing by at 
 | Gohan | Three-point bridge; scapular pull-ups |
 | Trunks | Ring rows; heel-dig bridges |
 
-Every movement has base-form and Super Saiyan artwork. The existing transformation unlock after two completed loops applies to all ten movements. Goku and Vegeta demonstrate three movements each; Gohan and adult Future Trunks demonstrate two each. All figures have adult proportions. The artwork assets, references and generation prompts are documented in [routine-artwork.md](docs/routine-artwork.md).
+Every movement has base-form and Super Saiyan artwork. Completing one full loop within a single workout day unlocks Super Saiyan artwork for all ten movements. Goku and Vegeta demonstrate three movements each; Gohan and adult Future Trunks demonstrate two each. All figures have adult proportions. The artwork assets, references and generation prompts are documented in [routine-artwork.md](docs/routine-artwork.md).
 
 ## Launcher icon
 
