@@ -12,7 +12,7 @@ data class Completion(
     val exerciseId: String,
     val amount: Int,
     val completedAt: Long = System.currentTimeMillis(),
-    @ColumnInfo(defaultValue = "1") val routineVersion: Int = CURRENT_ROUTINE_VERSION
+    @ColumnInfo(defaultValue = "1") val routineVersion: Int = RoutineCatalog.CURRENT_VERSION
 )
 
 @Dao

@@ -35,7 +35,7 @@ fun rotationState(
     completions
         .sortedWith(compareBy<Completion> { it.completedAt }.thenBy { it.id })
         .forEach { completion ->
-            val routine = exercisesForRoutine(completion.routineVersion)
+            val routine = RoutineCatalog.exercisesForVersion(completion.routineVersion)
             val completedIndex = routine.indexOfFirst { it.id == completion.exerciseId }
             if (completedIndex < 0) return@forEach
             val completionDate = workoutDate(
@@ -54,7 +54,7 @@ fun rotationState(
             // Skipping advances the queue, but cannot contribute to a completed loop.
             exercisesInLoop = if (completion.amount > 0) exercisesInLoop + 1 else 0
             expectedIndex = (completedIndex + 1) % routine.size
-            currentIndex = nextExerciseIndex(completion.exerciseId)
+            currentIndex = RoutineCatalog.nextExerciseIndex(completion.exerciseId)
             if (exercisesInLoop == routine.size) {
                 completedRotations++
                 if (completionDate == date) rotationsOnDate++

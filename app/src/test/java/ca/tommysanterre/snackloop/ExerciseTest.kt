@@ -2,6 +2,7 @@ package ca.tommysanterre.snackloop
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ExerciseTest {
@@ -19,7 +20,7 @@ class ExerciseTest {
             "heel_dig_bridges" to (0..8).toList(),
             "bear_plank" to (0..15).toList()
         )
-        assertEquals(expected, exercises.associate { it.id to it.recordingAmounts() })
+        assertEquals(expected, RoutineCatalog.currentExercises.associate { it.id to it.recordingAmounts() })
     }
 
     @Test
@@ -34,16 +35,66 @@ class ExerciseTest {
             "pullups" to ("Chin-ups" to "reps")
         )
         expected.forEach { (id, details) ->
-            val exercise = exerciseForId(id)!!
+            val exercise = RoutineCatalog.exerciseForId(id)!!
             assertEquals(details.first, exercise.name)
             assertEquals(details.second, exercise.unit.historyLabel(30))
-            assertEquals(false, exercises.any { it.id == id })
+            assertEquals(false, RoutineCatalog.currentExercises.any { it.id == id })
         }
-        assertNull(exerciseForId("unknown"))
+        assertNull(RoutineCatalog.exerciseForId("unknown"))
     }
 
     @Test
     fun `new completions use the current routine version`() {
         assertEquals(4, Completion(exerciseId = "scapular_pullups", amount = 3).routineVersion)
+    }
+
+    @Test
+    fun `resolving a completion honors its recorded routine version before falling back`() {
+        val v2LSit = Completion(exerciseId = "tuck_l_sit", amount = 10, routineVersion = 2)
+        val v4LSit = Completion(exerciseId = "tuck_l_sit", amount = 10, routineVersion = 4)
+        val unknownVersionChinUp = Completion(exerciseId = "pullups", amount = 1, routineVersion = 99)
+
+        assertEquals(listOf(5, 10, 15), RoutineCatalog.resolve(v2LSit)?.amounts)
+        assertEquals((1..15).toList(), RoutineCatalog.resolve(v4LSit)?.amounts)
+        assertEquals("Chin-ups", RoutineCatalog.resolve(unknownVersionChinUp)?.name)
+        assertNull(RoutineCatalog.resolve(Completion(exerciseId = "unknown", amount = 1, routineVersion = 99)))
+    }
+
+    @Test
+    fun `every exercise across all versions advances to a valid current slot and unknown IDs default safely`() {
+        (1..RoutineCatalog.CURRENT_VERSION).forEach { version ->
+            val routine = RoutineCatalog.exercisesForVersion(version)
+            assertTrue("Version $version should not be empty", routine.isNotEmpty())
+            routine.forEach { exercise ->
+                val nextIndex = RoutineCatalog.nextExerciseIndex(exercise.id)
+                assertTrue(
+                    "Invalid next index $nextIndex for ${exercise.id} in version $version",
+                    nextIndex in RoutineCatalog.currentExercises.indices
+                )
+            }
+        }
+        assertEquals(0, RoutineCatalog.nextExerciseIndex("unknown"))
+        assertEquals(RoutineCatalog.currentExercises.first(), RoutineCatalog.exerciseAt(-1))
+        assertEquals(RoutineCatalog.currentExercises.first(), RoutineCatalog.exerciseAt(999))
+    }
+
+    @Test
+    fun `recorded amount formatting and accessibility labels handle skips, singular, plural and unknown`() {
+        val chinUps = RoutineCatalog.exerciseForId("pullups")!!
+        val lunges = RoutineCatalog.exerciseForId("reverse_lunges")!!
+
+        assertEquals("Skipped", RoutineCatalog.formatRecordedAmount(0, chinUps))
+        assertEquals("1 rep", RoutineCatalog.formatRecordedAmount(1, chinUps))
+        assertEquals("5 reps per side", RoutineCatalog.formatRecordedAmount(5, lunges))
+        assertEquals("7 units", RoutineCatalog.formatRecordedAmount(7, null))
+
+        assertEquals(
+            "Skip Reverse lunges and go to next exercise",
+            lunges.recordingActionDescription(0)
+        )
+        assertEquals(
+            "Record 5 reps per side and go to next exercise",
+            lunges.recordingActionDescription(5)
+        )
     }
 }

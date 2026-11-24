@@ -29,52 +29,14 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
-internal fun artworkFor(id: String, superSaiyan: Boolean = false): Int = when {
-    superSaiyan && id == "knee_pushups" -> R.drawable.movement_knee_pushups_ssj
-    superSaiyan && id == "heel_dig_bridges" -> R.drawable.movement_heel_dig_bridges_ssj
-    superSaiyan && id == "bear_plank" -> R.drawable.movement_bear_plank_ssj
-    superSaiyan && id == "scapular_pullups" -> R.drawable.movement_scapular_pullups_ssj
-    superSaiyan && id == "pushups" -> R.drawable.movement_pushups_ssj
-    superSaiyan && id == "squats" -> R.drawable.movement_squats_ssj
-    superSaiyan && id == "three_point_bridge" -> R.drawable.movement_three_point_bridge_ssj
-    superSaiyan && id == "pullups" -> R.drawable.movement_pullups_ssj
-    superSaiyan && id == "single_leg_rdl" -> R.drawable.movement_single_leg_rdl_ssj
-    superSaiyan && id == "tuck_l_sit" -> R.drawable.movement_tuck_l_sit_ssj
-    superSaiyan && id == "reverse_lunges" -> R.drawable.movement_reverse_lunges_ssj
-    superSaiyan && id == "ring_rows" -> R.drawable.movement_ring_rows_ssj
-    superSaiyan && id == "ring_hamstring_curls" -> R.drawable.movement_ring_hamstring_curls_ssj
-    superSaiyan && id == "pike_pushups" -> R.drawable.movement_pike_pushups_ssj
-    superSaiyan && id == "deep_squat" -> R.drawable.movement_deep_squat_ssj
-    superSaiyan && id == "dead_hang" -> R.drawable.movement_dead_hang_ssj
-    id == "knee_pushups" -> R.drawable.movement_knee_pushups
-    id == "heel_dig_bridges" -> R.drawable.movement_heel_dig_bridges
-    id == "bear_plank" -> R.drawable.movement_bear_plank
-    id == "scapular_pullups" -> R.drawable.movement_scapular_pullups
-    id == "pushups" -> R.drawable.movement_pushups
-    id == "squats" -> R.drawable.movement_squats
-    id == "deep_squat" -> R.drawable.movement_deep_squat
-    id == "pullups" -> R.drawable.movement_pullups
-    id == "dead_hang" -> R.drawable.movement_dead_hang
-    id == "reverse_lunges" -> R.drawable.movement_reverse_lunges
-    id == "ring_rows" -> R.drawable.movement_ring_rows
-    id == "hip_flexor" -> R.drawable.movement_hip_flexor
-    id == "three_point_bridge" -> R.drawable.movement_three_point_bridge
-    id == "single_leg_rdl" -> R.drawable.movement_single_leg_rdl
-    id == "tuck_l_sit" -> R.drawable.movement_tuck_l_sit
-    id == "ring_hamstring_curls" -> R.drawable.movement_ring_hamstring_curls
-    id == "pike_pushups" -> R.drawable.movement_pike_pushups
-    else -> error("No movement artwork for $id")
-}
-
 @Composable
 fun MovementDiagram(exercise: Exercise, superSaiyan: Boolean) {
     val context = LocalContext.current
-    val artwork = artworkFor(exercise.id, superSaiyan)
+    val artwork = exercise.artwork.drawable(superSaiyan)
     val image = remember(artwork) {
         BitmapFactory.decodeResource(context.resources, artwork).asImageBitmap()
     }
-    // The deadlift illustration has a narrower start panel in both character forms.
-    val split = if (exercise.id == "single_leg_rdl") image.width * 11 / 24 else image.width / 2
+    val split = exercise.artwork.splitX(image.width)
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         PoseCard("START", exercise.name, image, 0, split, Modifier.weight(1f))
         PoseCard("END", exercise.name, image, 1, split, Modifier.weight(1f))

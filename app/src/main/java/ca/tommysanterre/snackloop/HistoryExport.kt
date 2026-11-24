@@ -18,11 +18,13 @@ internal fun historyExport(
     val recent = ordered.filter { it.day() in start..today }
     val rotation = rotationState(ordered, today, zone)
 
+    val currentExercises = RoutineCatalog.currentExercises
+
     appendLine("# Hyperbolic Time Chamber — workout history")
     appendLine()
     appendLine("Exported: ${generatedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)}")
     appendLine("Time zone: $zone. Workout days run from 4 AM to 4 AM in this zone.")
-    appendLine("Current routine: $CURRENT_ROUTINE_VERSION. Saved records: ${ordered.size}.")
+    appendLine("Current routine: ${RoutineCatalog.CURRENT_VERSION}. Saved records: ${ordered.size}.")
     appendLine("Completed loops (all time): ${rotation.completedRotations}.")
     appendLine()
     appendLine("## Context to add when asking about difficulty")
@@ -35,13 +37,13 @@ internal fun historyExport(
     appendLine()
     appendLine("| Movement | Target | Available recording amounts |")
     appendLine("| --- | --- | --- |")
-    exercises.forEach { exercise ->
+    currentExercises.forEach { exercise ->
         appendLine("| ${exercise.name.cell()} | ${exercise.target.cell()} | ${exercise.amounts.joinToString(", ")} ${exercise.unit.historyLabel(2)}; 0 = skip |")
     }
     appendLine()
     appendLine("### Current movement instructions")
     appendLine()
-    exercises.forEach { appendLine("- ${it.name}: ${it.description}") }
+    currentExercises.forEach { appendLine("- ${it.name}: ${it.description}") }
     appendLine()
     appendLine("## Recent summary: $start through $today (28 workout days)")
     appendLine()
@@ -51,10 +53,10 @@ internal fun historyExport(
     appendLine("| Movement | Unit | Completed | Skipped | Average | Range | Latest 5 entries |")
     appendLine("| --- | --- | --- | --- | --- | --- | --- |")
     val groups = recent.groupBy { it.exerciseId }
-    val ids = exercises.map { it.id } + groups.keys.filter { id -> exercises.none { it.id == id } }
+    val ids = currentExercises.map { it.id } + groups.keys.filter { id -> currentExercises.none { it.id == id } }
     ids.forEach { id ->
         val entries = groups[id].orEmpty()
-        val metadata = entries.lastOrNull()?.metadata() ?: exerciseForId(id)
+        val metadata = entries.lastOrNull()?.let(RoutineCatalog::resolve) ?: RoutineCatalog.exerciseForId(id)
         val amounts = entries.filter { it.amount > 0 }.map { it.amount }
         val average = if (amounts.isEmpty()) "—" else String.format(Locale.ROOT, "%.1f", amounts.average())
         val range = if (amounts.isEmpty()) "—" else "${amounts.min()}–${amounts.max()}"
@@ -71,14 +73,11 @@ internal fun historyExport(
     appendLine("| Record | Timestamp | Workout day | Movement | Movement ID | Amount | Unit | Result | Routine |")
     appendLine("| --- | --- | --- | --- | --- | --- | --- | --- | --- |")
     ordered.forEach { item ->
-        val metadata = item.metadata()
+        val metadata = RoutineCatalog.resolve(item)
         val time = Instant.ofEpochMilli(item.completedAt).atZone(zone).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
         appendLine("| ${item.id} | $time | ${item.day()} | ${(metadata?.name ?: item.exerciseId).cell()} | ${item.exerciseId.cell()} | ${item.amount} | ${metadata?.unit?.historyLabel(item.amount) ?: "units"} | ${if (item.amount == 0) "Skipped" else "Completed"} | ${item.routineVersion} |")
     }
     if (ordered.isEmpty()) appendLine("No saved movements yet.")
 }
-
-private fun Completion.metadata(): Exercise? =
-    exercisesForRoutine(routineVersion).firstOrNull { it.id == exerciseId } ?: exerciseForId(exerciseId)
 
 private fun String.cell() = replace("|", "\\|").replace("\r", " ").replace("\n", " ")
