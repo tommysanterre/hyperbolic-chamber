@@ -45,7 +45,7 @@ fun HyperbolicApp(vm: MainViewModel = viewModel()) {
     val state by vm.state.collectAsState()
     var historyOpen by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val exercise = exercises[state.currentIndex]
+    val exercise = RoutineCatalog.exerciseAt(state.currentIndex)
     BackHandler(enabled = historyOpen) { historyOpen = false }
     LaunchedEffect(context, snackbarHostState) {
         val update = checkForUpdate(context) ?: return@LaunchedEffect
@@ -166,8 +166,7 @@ private fun ExerciseScreen(
                             enabled = !storageUnavailable && !submitting,
                             contentPadding = PaddingValues(horizontal = 4.dp, vertical = 12.dp),
                             modifier = Modifier.weight(1f).heightIn(min = 52.dp).semantics {
-                                contentDescription = if (amount == 0) "Skip ${exercise.name} and go to next exercise"
-                                else "Record $amount ${exercise.unit.historyLabel(amount)} and go to next exercise"
+                                contentDescription = exercise.recordingActionDescription(amount)
                             }
                         ) {
                             Text(amount.toString(), style = MaterialTheme.typography.titleLarge)
@@ -199,11 +198,11 @@ private fun HistoryScreen(state: UiState, onMessage: suspend (String) -> Unit, m
         }
         else LazyColumn(Modifier.fillMaxWidth().weight(1f), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             items(state.completions, key = { it.id }) { item ->
-                val ex = exerciseForId(item.exerciseId)
+                val ex = RoutineCatalog.resolve(item)
                 ListItem(
                     headlineContent = { Text(ex?.name ?: item.exerciseId) },
                     supportingContent = { Text(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(item.completedAt))) },
-                    trailingContent = { Text(if (item.amount == 0) "Skipped" else "${item.amount} ${ex?.unit?.historyLabel(item.amount) ?: "units"}") }
+                    trailingContent = { Text(RoutineCatalog.formatRecordedAmount(item.amount, ex)) }
                 )
             }
         }

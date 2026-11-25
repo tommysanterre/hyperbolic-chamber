@@ -9,6 +9,10 @@ import java.time.ZonedDateTime
 class RotationLogicTest {
     private val zone = ZoneId.of("America/Toronto")
     private val today = LocalDate.of(2026, 9, 30)
+    private val exercises = RoutineCatalog.currentExercises
+    private val legacyExercises = RoutineCatalog.exercisesForVersion(1)
+    private val versionTwoExercises = RoutineCatalog.exercisesForVersion(2)
+    private val versionThreeExercises = RoutineCatalog.exercisesForVersion(3)
 
     @Test
     fun `exercise advances in order and wraps after bear plank`() {

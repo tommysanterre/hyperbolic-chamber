@@ -59,7 +59,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (amount < 0) return
         viewModelScope.launch {
             runCatching {
-                dao?.insert(Completion(exerciseId = exercises[state.value.currentIndex].id, amount = amount))
+                dao?.insert(Completion(exerciseId = RoutineCatalog.exerciseAt(state.value.currentIndex).id, amount = amount))
                     ?: error("Completion storage is unavailable")
             }.onFailure(::reportStorageFailure)
         }
