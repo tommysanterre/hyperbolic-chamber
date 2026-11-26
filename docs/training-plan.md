@@ -35,7 +35,7 @@ Suggested cadence: **Mon (Strength A) / Wed (Cardio) / Fri (Strength B)**, with 
 
 ### Day 2 — Cardio (30 min)
 
-- **Active (Owned Gear / No Machine Yet):** 30-minute **Zone 2** brisk walk, uphill/incline walk, light ruck (backpack), or cycling.
+- **Active:** 30-minute **Zone 2** brisk walk, uphill/incline walk, light ruck (backpack), or cycling.
   - **5 min** easy warm-up → **20 min** steady conversational pace (short sentences possible) → **5 min** easy cooldown + hip-flexor stretch.
 - **Wishlist Upgrade (Rowing Machine):**
   - **Weeks 1–4:** 5 min warm-up + 20 min steady Zone 2 (damper **3–5**, ~18–20 strokes/min) + 5 min cooldown.

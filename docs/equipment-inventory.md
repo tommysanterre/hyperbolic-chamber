@@ -24,10 +24,11 @@ Reference inventory for adapting workouts and daily snack routines. Keep this fi
 | **Hand grip & finger stretcher 6-pack** | **5BILLION FITNESS**, Orange / Grey / Black tiers in black drawstring pouch | 3 silicone grip rings (Black confirmed **`80 lb`** printed; Orange & Grey still in pouch, exact lb unverified) + 3 finger stretchers (Orange light / Grey medium / Black heavy, exact lb unverified) | Rarely used; finger stretchers are handy to keep in mind for forearm/elbow balance if pulling volume increases |
 | **Resistance band door anchor** | Unbranded (likely paired with DYNASQUARE band), black nylon loop with red stitching & foam stopper | Door-frame band anchor | Not needed for current zero-setup band pull-aparts; useful later for band face pulls, Pallof presses, or rotator-cuff external rotations (always anchor so pulling closes the door into the frame) |
 | **Climbing hangboard** | **So iLL Iron Palm** (Cryptochild / Jason Kehl design), blue polyurethane resin | Large spherical slopers, pinches, full-width edges | Currently **not installed**; available for future climbing/finger training if mounted |
+| **Folding treadmill** | **ProForm 765i Interactive Trainer**, model `PFTL9922` | Fold-up deck, quick speed and incline controls | Soft no for regular cardio (prefers other options) |
 
 ## Wishlist (Not Owned Yet)
 
 | Equipment | Details | Intended Role |
 | --- | --- | --- |
 | **NÜOBELL 580 adjustable dumbbells** | `5–80 lb` pair in `5 lb` increments (handle gently—never drop; optional stand later) | Goblet squats, dumbbell RDLs, neutral-grip overhead presses, reverse lunges, suitcase carries, supported one-arm rows |
-| **Rowing machine** | e.g., Concept2 RowErg | Dedicated 30-min low-impact cardio (damper 3–5) and 2–4 min strength warm-ups |
+| **Rowing machine** | [Ascend R-200 Air Rower (black)](https://movewithascend.com/fr/products/ascend-r-200-air-rower-black) is an early candidate. It has 10 levels of combined air and magnetic resistance and can be stored upright. Concept2 RowErg is a reference for comparison. | Dedicated 30-min low-impact cardio and 2–4 min strength warm-ups |

@@ -11,6 +11,7 @@
 ## Personal trainer & tracking docs
 
 - This repository serves as both the Android tracker app and the athlete's personal-training record.
+- The athlete is based in Québec, Canada. For equipment recommendations, use CAD, check availability in Québec, and use Québec sales taxes and shipping when estimating total costs.
 - Before recommending, adapting, or reviewing workouts, exercise snacks, or app routines, consult:
   - `docs/equipment-inventory.md` (owned gear with setup/preference notes, plus wishlist gear)
   - `docs/training-plan.md` (goals, constraints, active 3 × 30-min program, daily snack loop, and current baselines)
