@@ -13,6 +13,7 @@ class RotationLogicTest {
     private val legacyExercises = RoutineCatalog.exercisesForVersion(1)
     private val versionTwoExercises = RoutineCatalog.exercisesForVersion(2)
     private val versionThreeExercises = RoutineCatalog.exercisesForVersion(3)
+    private val versionFourExercises = RoutineCatalog.exercisesForVersion(4)
 
     @Test
     fun `exercise advances in order and wraps after bear plank`() {
@@ -69,8 +70,8 @@ class RotationLogicTest {
     }
 
     @Test
-    fun `day starting at ring rows counts only on returning to ring rows`() {
-        val startIndex = exercises.indexOfFirst { it.id == "ring_rows" }
+    fun `day starting at hip flexor counts only on returning to hip flexor`() {
+        val startIndex = exercises.indexOfFirst { it.id == "hip_flexor" }
         val previousDay = exercises.take(startIndex).mapIndexed { index, exercise ->
             completion(exercise, index, today.minusDays(1))
         }
@@ -173,29 +174,25 @@ class RotationLogicTest {
     fun `exercise metadata preserves reps seconds and per-side wording`() {
         assertEquals(
             listOf(
-                "knee_pushups",
-                "squats",
+                "dead_hang",
+                "deep_squat",
+                "band_pull_aparts",
                 "three_point_bridge",
                 "scapular_pullups",
-                "single_leg_rdl",
-                "tuck_l_sit",
-                "reverse_lunges",
-                "ring_rows",
-                "heel_dig_bridges",
+                "hip_flexor",
+                "squats",
                 "bear_plank"
             ),
             exercises.map { it.id }
         )
         assertEquals(
             listOf(
-                UnitType.REPS,
-                UnitType.REPS,
-                UnitType.REPS_PER_SIDE,
-                UnitType.REPS,
-                UnitType.REPS_PER_SIDE,
                 UnitType.SECONDS,
+                UnitType.SECONDS,
+                UnitType.REPS,
                 UnitType.REPS_PER_SIDE,
                 UnitType.REPS,
+                UnitType.SECONDS_PER_SIDE,
                 UnitType.REPS,
                 UnitType.SECONDS
             ),
@@ -203,16 +200,14 @@ class RotationLogicTest {
         )
         assertEquals(
             listOf(
-                "3–8 reps",
+                "20–30 seconds",
+                "20–30 seconds",
                 "10–15 reps",
                 "3–5 reps per side",
-                "3–8 reps",
-                "5–8 reps per side",
-                "5–15 seconds",
-                "5 reps per side",
-                "5–10 reps",
-                "5–8 reps",
-                "5–15 seconds"
+                "3–5 reps",
+                "20–30 seconds per side",
+                "10 reps",
+                "10–15 seconds"
             ),
             exercises.map { it.target }
         )
@@ -267,7 +262,7 @@ class RotationLogicTest {
         val current = exercises.mapIndexed { index, exercise -> completion(exercise, index) }
 
         assertEquals(2, state(legacy).completedRotations)
-        assertEquals(0, state(legacy).currentIndex)
+        assertEquals(exercises.indexOfFirst { it.id == "squats" }, state(legacy).currentIndex)
         assertEquals(3, state((legacy + current).reversed()).completedRotations)
         assertEquals(1, state(legacy + current).rotationsOnDate)
         assertEquals(2, state(legacy + current.dropLast(1)).completedRotations)
@@ -276,8 +271,8 @@ class RotationLogicTest {
     @Test
     fun `upgrade resumes after every legacy movement and preserves undo`() {
         val expectedNextIds = listOf(
-            "squats", "three_point_bridge", "scapular_pullups", "single_leg_rdl",
-            "single_leg_rdl", "ring_rows", "heel_dig_bridges", "knee_pushups"
+            "squats", "bear_plank", "band_pull_aparts", "hip_flexor",
+            "deep_squat", "squats", "band_pull_aparts", "squats"
         )
         legacyExercises.forEachIndexed { index, exercise ->
             val legacy = listOf(completion(exercise, 0).copy(routineVersion = 1))
@@ -294,7 +289,7 @@ class RotationLogicTest {
         val legacy = legacyExercises.take(2).mapIndexed { index, exercise ->
             completion(exercise, index).copy(routineVersion = 1)
         }
-        val start = exercises.indexOfFirst { it.id == "three_point_bridge" }
+        val start = exercises.indexOfFirst { it.id == "bear_plank" }
         val current = exercises.indices.map { offset ->
             completion(exercises[(start + offset) % exercises.size], offset + legacy.size)
         }
@@ -311,16 +306,16 @@ class RotationLogicTest {
         }
 
         assertEquals(0, state(legacy).completedRotations)
-        assertEquals(0, state(legacy).currentIndex)
+        assertEquals("squats", exercises[state(legacy).currentIndex].id)
         assertEquals(0, state(legacy.take(5)).completedRotations)
-        assertEquals("single_leg_rdl", exercises[state(legacy.take(5)).currentIndex].id)
+        assertEquals("deep_squat", exercises[state(legacy.take(5)).currentIndex].id)
     }
 
     @Test
     fun `version two loops keep their totals and every old position resumes correctly`() {
         val expectedNextIds = listOf(
-            "squats", "three_point_bridge", "scapular_pullups", "single_leg_rdl", "tuck_l_sit",
-            "reverse_lunges", "ring_rows", "heel_dig_bridges", "bear_plank", "knee_pushups"
+            "squats", "bear_plank", "scapular_pullups", "hip_flexor", "hip_flexor",
+            "squats", "squats", "band_pull_aparts", "bear_plank", "dead_hang"
         )
         val oldLoop = versionTwoExercises.mapIndexed { index, exercise ->
             completion(exercise, index).copy(routineVersion = 2)
@@ -346,13 +341,14 @@ class RotationLogicTest {
         val old = versionTwoExercises.take(8).mapIndexed { index, exercise ->
             completion(exercise, index).copy(routineVersion = 2)
         }
+        val start = exercises.indexOfFirst { it.id == "band_pull_aparts" }
         val current = exercises.indices.map { offset ->
-            completion(exercises[(8 + offset) % exercises.size], offset + old.size)
+            completion(exercises[(start + offset) % exercises.size], offset + old.size)
         }
         assertEquals(0, state(old + current.take(2)).completedRotations)
         assertEquals(0, state(old + current.dropLast(1)).completedRotations)
         assertEquals(1, state(old + current).completedRotations)
-        assertEquals(8, state(old + current).currentIndex)
+        assertEquals(start, state(old + current).currentIndex)
     }
 
     @Test
@@ -365,15 +361,27 @@ class RotationLogicTest {
     }
 
     @Test
-    fun `version three loops and every queue position survive scapular substitution`() {
+    fun `version three loops keep their totals across routine upgrades`() {
         val oldLoop = versionThreeExercises.mapIndexed { index, exercise ->
             completion(exercise, index).copy(routineVersion = 3)
         }
-        val expectedNextIds = exercises.drop(1).map { it.id } + exercises.first().id
+        assertEquals(1, state(oldLoop).completedRotations)
+        assertEquals("dead_hang", exercises[state(oldLoop).currentIndex].id)
+    }
+
+    @Test
+    fun `version four loops and every queue position survive version five transition`() {
+        val expectedNextIds = listOf(
+            "squats", "bear_plank", "scapular_pullups", "hip_flexor", "hip_flexor",
+            "squats", "squats", "band_pull_aparts", "bear_plank", "dead_hang"
+        )
+        val oldLoop = versionFourExercises.mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 4)
+        }
         oldLoop.indices.forEach { index ->
             val history = oldLoop.take(index + 1)
             val next = exercises[state(history).currentIndex]
-            assertEquals(expectedNextIds[index], next.id)
+            assertEquals(versionFourExercises[index].id, expectedNextIds[index], next.id)
             val updated = history + completion(next, index + 1)
             assertEquals((exercises.indexOf(next) + 1) % exercises.size, state(updated).currentIndex)
             assertEquals(exercises.indexOf(next), state(updated.dropLast(1)).currentIndex)
@@ -387,27 +395,28 @@ class RotationLogicTest {
     }
 
     @Test
-    fun `partial chin-up routine cannot complete a scapular routine loop`() {
-        val old = versionThreeExercises.take(3).mapIndexed { index, exercise ->
-            completion(exercise, index).copy(routineVersion = 3)
+    fun `partial version four loop cannot combine with version five snack loop`() {
+        val old = versionFourExercises.take(7).mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 4)
         }
+        val start = exercises.indexOfFirst { it.id == "squats" }
         val current = exercises.indices.map { offset ->
-            completion(exercises[(3 + offset) % exercises.size], offset + old.size)
+            completion(exercises[(start + offset) % exercises.size], offset + old.size)
         }
-        assertEquals("scapular_pullups", exercises[state(old).currentIndex].id)
-        assertEquals(0, state(old + current.take(7)).completedRotations)
+        assertEquals("squats", exercises[state(old).currentIndex].id)
+        assertEquals(0, state(old + current.take(3)).completedRotations)
         assertEquals(0, state(old + current.dropLast(1)).completedRotations)
         assertEquals(1, state(old + current).completedRotations)
-        assertEquals(3, state(old + current).currentIndex)
+        assertEquals(start, state(old + current).currentIndex)
     }
 
     @Test
-    fun `skipped old chin-up advances to deadlift and undo restores scapular slot`() {
-        val old = versionThreeExercises.take(4).mapIndexed { index, exercise ->
-            completion(exercise, index).copy(routineVersion = 3, amount = if (index == 3) 0 else 5)
+    fun `skipped version four ring rows advances to band pull-aparts`() {
+        val old = versionFourExercises.take(8).mapIndexed { index, exercise ->
+            completion(exercise, index).copy(routineVersion = 4, amount = if (index == 7) 0 else 5)
         }
-        assertEquals("single_leg_rdl", exercises[state(old).currentIndex].id)
-        assertEquals("scapular_pullups", exercises[state(old.dropLast(1)).currentIndex].id)
+        assertEquals("band_pull_aparts", exercises[state(old).currentIndex].id)
+        assertEquals("squats", exercises[state(old.dropLast(1)).currentIndex].id)
         assertEquals(0, state(old).completedRotations)
     }
 

@@ -58,7 +58,7 @@ fun UnitType.historyLabel(amount: Int) = when (this) {
  * artwork descriptors, and cross-version queue transitions.
  */
 object RoutineCatalog {
-    const val CURRENT_VERSION = 4
+    const val CURRENT_VERSION = 5
 
     private data class RoutineVersion(
         val version: Int,
@@ -259,7 +259,62 @@ object RoutineCatalog {
         )
     )
 
-    private val versions: List<RoutineVersion> = listOf(version1, version2, version3, version4)
+    private val version5 = RoutineVersion(
+        version = 5,
+        exercises = listOf(
+            version1.exercise("dead_hang").copy(
+                target = "20–30 seconds",
+                description = "Hang from the bar with straight arms and let your shoulders settle comfortably without shrugging forcefully. Breathe steadily and step down well before your grip fails.",
+                amounts = listOf(5, 10, 15, 20, 25, 30)
+            ),
+            version1.exercise("deep_squat").copy(
+                target = "20–30 seconds",
+                description = "Sink into a comfortable deep squat with both feet planted and hold the bottom position while breathing steadily. Keep your chest upright and hold a light support if your heels lift.",
+                amounts = listOf(5, 10, 15, 20, 25, 30)
+            ),
+            Exercise(
+                id = "band_pull_aparts",
+                name = "Band pull-aparts",
+                target = "10–15 reps",
+                unit = UnitType.REPS,
+                description = "Stand tall holding a single strand of a light resistance band straight out at chest height with straight arms and shoulders relaxed down. Pull your hands wide until the band touches your chest, squeezing your shoulder blades together, then return slowly with control.",
+                artwork = MovementArtwork(R.drawable.movement_band_pull_aparts, R.drawable.movement_band_pull_aparts_ssj),
+                amounts = (5..15).toList()
+            ),
+            version4.exercise("three_point_bridge"),
+            version4.exercise("scapular_pullups").copy(
+                target = "3–5 reps",
+                description = "Grip the bar with palms facing away, about shoulder-width apart, and hang with straight elbows. Draw your shoulders smoothly down away from your ears to lift your body a few centimetres, pause briefly, then lower slowly without swinging. Keep these sets easy and well short of failure.",
+                amounts = (1..8).toList()
+            ),
+            version1.exercise("hip_flexor").copy(
+                target = "20–30 seconds per side",
+                description = "From a half-kneeling position with a pad under the trailing knee if desired, gently tuck your pelvis and shift your hips forward until you feel a comfortable stretch at the front of the trailing hip. Stay tall and breathe steadily on each side.",
+                artwork = MovementArtwork(R.drawable.movement_hip_flexor, R.drawable.movement_hip_flexor_ssj),
+                amounts = listOf(5, 10, 15, 20, 25, 30)
+            ),
+            version4.exercise("squats").copy(
+                target = "10 reps",
+                description = "Stand comfortably, sit your hips down and back at an easy pace, then stand tall again. Keep the set smooth and low-fatigue to lubricate your knees and hips.",
+                amounts = (5..15).toList()
+            ),
+            version4.exercise("bear_plank").copy(
+                target = "10–15 seconds",
+                description = "Start on hands (or low parallettes for neutral wrists) and knees, wrists under shoulders and knees under hips. Tuck your toes, press the floor away, and hover your knees just a few centimetres with a level back. Breathe normally and stop well before form breaks.",
+                amounts = (1..15).toList()
+            )
+        ),
+        retiredResumeTargets = mapOf(
+            "knee_pushups" to "squats",
+            "single_leg_rdl" to "hip_flexor",
+            "tuck_l_sit" to "squats",
+            "reverse_lunges" to "squats",
+            "ring_rows" to "band_pull_aparts",
+            "heel_dig_bridges" to "bear_plank"
+        )
+    )
+
+    private val versions: List<RoutineVersion> = listOf(version1, version2, version3, version4, version5)
     private val versionsByNumber: Map<Int, List<Exercise>> = versions.associate { it.version to it.exercises }
     private val exercisesByVersionAndId: Map<Int, Map<String, Exercise>> =
         versions.associate { routine -> routine.version to routine.exercises.associateBy { it.id } }
@@ -275,7 +330,7 @@ object RoutineCatalog {
         versions.forEach { putAll(it.retiredResumeTargets) }
     }
 
-    val currentExercises: List<Exercise> = version4.exercises
+    val currentExercises: List<Exercise> = version5.exercises
     private val currentIndexById: Map<String, Int> =
         currentExercises.withIndex().associate { (index, exercise) -> exercise.id to index }
 
@@ -323,18 +378,21 @@ object RoutineCatalog {
 
     private fun resolveNextExerciseId(exerciseId: String): String? {
         val equivalent = followChain(exerciseId, includeRetiredTargets = false)
+        currentIndexById[equivalent]?.let { currentIndex ->
+            return currentExercises[(currentIndex + 1) % currentExercises.size].id
+        }
         retiredResumeTargets[equivalent]?.let { target ->
             val resumeId = followChain(target, includeRetiredTargets = true)
             return resumeId.takeIf { it in currentIndexById }
         }
-        val currentIndex = currentIndexById[equivalent] ?: return null
-        return currentExercises[(currentIndex + 1) % currentExercises.size].id
+        return null
     }
 
     private fun followChain(startId: String, includeRetiredTargets: Boolean): String {
         var current = startId
         val visited = mutableSetOf<String>()
         while (visited.add(current)) {
+            if (includeRetiredTargets && current in currentIndexById) break
             val next = replacements[current]
                 ?: (if (includeRetiredTargets) retiredResumeTargets[current] else null)
                 ?: break

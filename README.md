@@ -4,26 +4,24 @@ Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a
 
 ## Rotation
 
-1. Knee push-ups — 3–8 reps
-2. Squats — 10–15 reps
-3. Three-point bridge — 3–5 reps per side
-4. Scapular pull-ups — 3–8 reps
-5. Supported single-leg Romanian deadlift — 5–8 reps per side
-6. Tuck L-sit — 5–15 seconds
-7. Reverse lunges — 5 reps per side
-8. Ring rows — 5–10 reps
-9. Heel-dig bridges — 5–8 reps
-10. Bear plank hold — 5–15 seconds
+1. Dead hang — 20–30 seconds
+2. Deep squat hold — 20–30 seconds
+3. Band pull-aparts — 10–15 reps
+4. Three-point bridge — 3–5 reps per side
+5. Scapular pull-ups — 3–5 reps
+6. Hip-flexor stretch — 20–30 seconds per side
+7. Squats — 10 reps
+8. Bear plank hold — 10–15 seconds
 
-These variations keep setup quick and match the current starting level. Heel-dig bridges use the floor, so the rings can stay at rowing height. Bear planks use bent knees under the hips and a level back, avoiding the pike A-frame; they provide shoulder support and core practice rather than an overhead press. Knee push-ups keep a straight line from shoulders to knees. Scapular pull-ups use an overhand grip and straight elbows: draw the shoulders down away from the ears to lift the body a few centimetres, pause briefly, then lower slowly without swinging. Use light foot support on a stable step if needed. Ring rows remain the routine's main bent-arm pulling movement. Knee push-ups, scapular pull-ups, heel-dig bridges, tuck L-sits and bear plank holds let you record from 1 rep or 1 second. Stop before form breaks and record the amount you completed.
+Routine version 5 refocuses the daily snack loop on low-fatigue mobility, posture, and joint lubrication (using owned gear only, with gymnastic rings retired from active setup) to complement the 3 × 30-minute weekly strength and cardio program tracked in [docs/training-plan.md](docs/training-plan.md). See [docs/equipment-inventory.md](docs/equipment-inventory.md) and [docs/training-log.md](docs/training-log.md) for the personal-training inventory and session log.
 
-Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days: at 4–6 movements per day, work through the routine over roughly 2 days and resume wherever you stopped. There is no daily completion requirement or limit. Dead hangs, hip-flexor stretches and calf raises can be done as optional extras outside the tracked rotation.
+Spread 1–2 snacks at a time across the day—primarily on non-workout days—and stop well short of failure. Complete the movement shown, record the amount, and Hyperbolic Time Chamber advances to the next movement. The queue persists across days with no daily completion requirement or limit.
 
-A workout day runs from **4 AM to 4 AM in your local time**. The existing daily loop counter counts only after completing all ten exercises in order within that same workout day, returning the queue to the exercise where the loop started. For example, if your day starts at ring rows, complete ring rows and the following nine exercises to return to ring rows and earn a loop. Partial progress toward this daily counter does not carry over at 4 AM; your position in the exercise queue does. Tap **0** to skip any movement, including timed holds. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. A skip advances the queue but resets progress toward a completed loop; complete all ten exercises after it to earn the next loop.
+A workout day runs from **4 AM to 4 AM in your local time**. The existing daily loop counter counts only after completing all eight exercises in order within that same workout day, returning the queue to the exercise where the loop started. For example, if your day starts at hip-flexor stretch, complete hip-flexor stretch and the following seven exercises to return to hip-flexor stretch and earn a loop. Partial progress toward this daily counter does not carry over at 4 AM; your position in the exercise queue does. Tap **0** to skip any movement, including timed holds. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. A skip advances the queue but resets progress toward a completed loop; complete all eight exercises after it to earn the next loop.
 
-Updating from the previous eight-movement routine keeps saved history, its original movement names and units, and previously earned loop totals. New records use the ten-movement routine; a partial old loop cannot be combined with the new routine to earn a loop. Retired movements are no longer queued. The queue resumes after the last saved movement, using the next appropriate movement in the new routine.
+Updating from earlier routines keeps saved history, original movement names and units, and previously earned loop totals. New records use the eight-movement routine (version 5); partial loops cannot span routine versions. Retired movements are no longer queued, and the queue resumes at the next appropriate movement in the new routine. No database reset is needed.
 
-The current routine is version 4. Version 3 introduced Knee push-ups, Heel-dig bridges and Bear plank hold with separate movement IDs; records from version 2 retain Push-ups, Ring hamstring curls and Pike push-ups as their original names and rep units. Version 4 replaces Chin-ups with Scapular pull-ups using a new movement ID, so earlier chin-up records keep their original name and amounts. Completed loops from all earlier routines remain counted, and the queue resumes at the corresponding next slot; partial loops cannot span routine versions. No database reset is needed.
+The current routine is version 5. Version 3 introduced Knee push-ups, Heel-dig bridges and Bear plank hold with separate movement IDs; version 4 replaced Chin-ups with Scapular pull-ups; version 5 brings back Dead hang, Deep squat hold and Hip-flexor stretch alongside Band pull-aparts while moving heavier strength work into the dedicated 3 × 30-minute workouts. Earlier records retain their original names, units and amounts.
 
 Exercise references: [ACE knee push-up technique](https://www.acefitness.org/resources/everyone/exercise-library/13/bent-knee-push-up/), [heel-supported hamstring bridge](https://holisticphysiofitness.com.au/exercise/hamstring-bridge-with-heels-strength/), [University of Portsmouth plank variations](https://sport.port.ac.uk/news-events-and-blogs/6-plank-variations-to-strengthen-your-core), and [Crossover Health pull-up progressions](https://be-well.crossoverhealth.com/wp-content/uploads/sites/2/2022/08/Pull-up-Progression.pdf). The short targets above are this app's starting points.
 
@@ -35,16 +33,16 @@ When sharing the report to adjust difficulty, also describe how hard each exerci
 
 ## Movement illustrations
 
-The ten movements use four adult Saiyans, with character totals differing by at most one:
+The eight movements use four adult Saiyans, with two movements each:
 
 | Character | Movements |
 | --- | --- |
-| Goku | Knee push-ups; supported single-leg Romanian deadlift; bear plank hold |
-| Vegeta | Squats; tuck L-sit; reverse lunges |
+| Goku | Deep squat hold; bear plank hold |
+| Vegeta | Hip-flexor stretch; squats |
 | Gohan | Three-point bridge; scapular pull-ups |
-| Trunks | Ring rows; heel-dig bridges |
+| Trunks | Dead hang; band pull-aparts |
 
-Every movement has base-form and Super Saiyan artwork. Completing one full loop within a single workout day unlocks Super Saiyan artwork for all ten movements. Goku and Vegeta demonstrate three movements each; Gohan and adult Future Trunks demonstrate two each. All figures have adult proportions. The artwork assets, references and generation prompts are documented in [routine-artwork.md](docs/routine-artwork.md).
+Every movement has base-form and Super Saiyan artwork. Completing one full loop within a single workout day unlocks Super Saiyan artwork for all eight movements. All figures have adult proportions. The artwork assets, references and generation prompts are documented in [routine-artwork.md](docs/routine-artwork.md).
 
 ## Launcher icon
 

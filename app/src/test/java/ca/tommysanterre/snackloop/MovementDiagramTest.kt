@@ -36,12 +36,13 @@ class MovementDiagramTest {
     }
 
     @Test
-    fun `single-leg deadlift uses narrower start panel while other active movements split evenly`() {
+    fun `active movements split evenly while historical single-leg deadlift retains its narrower start panel`() {
         val sampleWidth = 2400
         RoutineCatalog.currentExercises.forEach { exercise ->
-            val expectedSplit = if (exercise.id == "single_leg_rdl") 1100 else 1200
-            assertEquals(exercise.id, expectedSplit, exercise.artwork.splitX(sampleWidth))
+            assertEquals(exercise.id, 1200, exercise.artwork.splitX(sampleWidth))
         }
+        val historicalRdl = RoutineCatalog.exerciseForId("single_leg_rdl")!!
+        assertEquals(1100, historicalRdl.artwork.splitX(sampleWidth))
     }
 
     @Test
