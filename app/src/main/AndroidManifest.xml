@@ -7,15 +7,6 @@
         android:label="Hyperbolic Time Chamber"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.Hyperbolic">
-        <provider
-            android:name=".HistoryExportProvider"
-            android:authorities="${applicationId}.history-export"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/history_export_paths" />
-        </provider>
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -18,13 +18,13 @@ internal fun historyExport(
     val recent = ordered.filter { it.day() in start..today }
     val rotation = rotationState(ordered, today, zone)
 
-    val currentExercises = RoutineCatalog.currentExercises
+    val exercises = RoutineCatalog.exercises
 
     appendLine("# Hyperbolic Time Chamber — workout history")
     appendLine()
     appendLine("Exported: ${generatedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)}")
     appendLine("Time zone: $zone. Workout days run from 4 AM to 4 AM in this zone.")
-    appendLine("Current routine: ${RoutineCatalog.CURRENT_VERSION}. Saved records: ${ordered.size}.")
+    appendLine("Current routine: ${RoutineCatalog.VERSION}. Saved records: ${ordered.size}.")
     appendLine("Completed loops (all time): ${rotation.completedRotations}.")
     appendLine()
     appendLine("## Context to add when asking about difficulty")
@@ -37,26 +37,26 @@ internal fun historyExport(
     appendLine()
     appendLine("| Movement | Target | Available recording amounts |")
     appendLine("| --- | --- | --- |")
-    currentExercises.forEach { exercise ->
+    exercises.forEach { exercise ->
         appendLine("| ${exercise.name.cell()} | ${exercise.target.cell()} | ${exercise.amounts.joinToString(", ")} ${exercise.unit.historyLabel(2)}; 0 = skip |")
     }
     appendLine()
     appendLine("### Current movement instructions")
     appendLine()
-    currentExercises.forEach { appendLine("- ${it.name}: ${it.description}") }
+    exercises.forEach { appendLine("- ${it.name}: ${it.description}") }
     appendLine()
     appendLine("## Recent summary: $start through $today (28 workout days)")
     appendLine()
     appendLine("Completed movements: ${recent.count { it.amount > 0 }}. Skips: ${recent.count { it.amount == 0 }}. Days with a completed movement: ${recent.filter { it.amount > 0 }.map { it.day() }.distinct().size}.")
-    appendLine("Averages and ranges exclude skips. Latest entries run oldest to newest. Earlier movement variations are listed separately.")
+    appendLine("Averages and ranges exclude skips. Latest entries run oldest to newest.")
     appendLine()
     appendLine("| Movement | Unit | Completed | Skipped | Average | Range | Latest 5 entries |")
     appendLine("| --- | --- | --- | --- | --- | --- | --- |")
     val groups = recent.groupBy { it.exerciseId }
-    val ids = currentExercises.map { it.id } + groups.keys.filter { id -> currentExercises.none { it.id == id } }
+    val ids = exercises.map { it.id } + groups.keys.filter { id -> exercises.none { it.id == id } }
     ids.forEach { id ->
         val entries = groups[id].orEmpty()
-        val metadata = entries.lastOrNull()?.let(RoutineCatalog::resolve) ?: RoutineCatalog.exerciseForId(id)
+        val metadata = RoutineCatalog.exerciseForId(id)
         val amounts = entries.filter { it.amount > 0 }.map { it.amount }
         val average = if (amounts.isEmpty()) "—" else String.format(Locale.ROOT, "%.1f", amounts.average())
         val range = if (amounts.isEmpty()) "—" else "${amounts.min()}–${amounts.max()}"
@@ -68,14 +68,14 @@ internal fun historyExport(
     appendLine()
     appendLine("## Complete saved log (oldest first)")
     appendLine()
-    appendLine("Timestamps include UTC offsets; workout dates use the export time zone. Historical movement names and units follow their recorded routine version. Targets above describe the current routine only.")
+    appendLine("Timestamps include UTC offsets; workout dates use the export time zone.")
     appendLine()
-    appendLine("| Record | Timestamp | Workout day | Movement | Movement ID | Amount | Unit | Result | Routine |")
-    appendLine("| --- | --- | --- | --- | --- | --- | --- | --- | --- |")
+    appendLine("| Record | Timestamp | Workout day | Movement | Movement ID | Amount | Unit | Result |")
+    appendLine("| --- | --- | --- | --- | --- | --- | --- | --- |")
     ordered.forEach { item ->
-        val metadata = RoutineCatalog.resolve(item)
+        val metadata = RoutineCatalog.exerciseForId(item.exerciseId)
         val time = Instant.ofEpochMilli(item.completedAt).atZone(zone).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-        appendLine("| ${item.id} | $time | ${item.day()} | ${(metadata?.name ?: item.exerciseId).cell()} | ${item.exerciseId.cell()} | ${item.amount} | ${metadata?.unit?.historyLabel(item.amount) ?: "units"} | ${if (item.amount == 0) "Skipped" else "Completed"} | ${item.routineVersion} |")
+        appendLine("| ${item.id} | $time | ${item.day()} | ${(metadata?.name ?: item.exerciseId).cell()} | ${item.exerciseId.cell()} | ${item.amount} | ${metadata?.unit?.historyLabel(item.amount) ?: "units"} | ${if (item.amount == 0) "Skipped" else "Completed"} |")
     }
     if (ordered.isEmpty()) appendLine("No saved movements yet.")
 }

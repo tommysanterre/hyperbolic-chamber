@@ -36,7 +36,7 @@ fun MovementDiagram(exercise: Exercise, superSaiyan: Boolean) {
     val image = remember(artwork) {
         BitmapFactory.decodeResource(context.resources, artwork).asImageBitmap()
     }
-    val split = exercise.artwork.splitX(image.width)
+    val split = image.width / 2
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         PoseCard("START", exercise.name, image, 0, split, Modifier.weight(1f))
         PoseCard("END", exercise.name, image, 1, split, Modifier.weight(1f))

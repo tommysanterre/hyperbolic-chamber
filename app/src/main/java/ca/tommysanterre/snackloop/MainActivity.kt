@@ -1,24 +1,19 @@
 ﻿package ca.tommysanterre.snackloop
 
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.compose.BackHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,8 +22,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import java.text.DateFormat
-import java.util.Date
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,11 +36,10 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 fun HyperbolicApp(vm: MainViewModel = viewModel()) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val state by vm.state.collectAsState()
-    var historyOpen by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val exercise = RoutineCatalog.exerciseAt(state.currentIndex)
-    BackHandler(enabled = historyOpen) { historyOpen = false }
     LaunchedEffect(context, snackbarHostState) {
         val update = checkForUpdate(context) ?: return@LaunchedEffect
         val result = snackbarHostState.showSnackbar(
@@ -76,17 +69,12 @@ fun HyperbolicApp(vm: MainViewModel = viewModel()) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    if (historyOpen) {
-                        IconButton(onClick = { historyOpen = false }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
-                        }
-                    }
                     Column(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            if (historyOpen) "History" else "Hyperbolic Time Chamber",
+                            "Hyperbolic Time Chamber",
                             style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp)
                         )
                         Text(
@@ -95,21 +83,25 @@ fun HyperbolicApp(vm: MainViewModel = viewModel()) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    if (!historyOpen) {
-                        IconButton(onClick = { historyOpen = true }) {
-                            Icon(Icons.Default.History, "History")
-                        }
-                    }
+                    TextButton(
+                        onClick = {
+                            val report = historyExport(state.completions)
+                            val clipboard = context.getSystemService(ClipboardManager::class.java)
+                            clipboard?.setPrimaryClip(ClipData.newPlainText("Workout history", report))
+                            scope.launch {
+                                snackbarHostState.currentSnackbarData?.dismiss()
+                                snackbarHostState.showSnackbar(
+                                    if (clipboard != null) "History copied" else "Clipboard unavailable"
+                                )
+                            }
+                        },
+                        enabled = state.completions.isNotEmpty() && !state.storageUnavailable
+                    ) { Text("Copy history") }
                 }
             }
         }
     ) { padding ->
-        if (historyOpen) HistoryScreen(
-            state,
-            onMessage = { snackbarHostState.showSnackbar(it) },
-            modifier = Modifier.padding(padding)
-        )
-        else ExerciseScreen(
+        ExerciseScreen(
             exercise = exercise,
             superSaiyan = state.superSaiyanUnlocked,
             canUndo = state.completions.isNotEmpty() && !state.storageUnavailable,
@@ -184,27 +176,5 @@ private fun ExerciseScreen(
             }
         }
         TextButton(onClick = onUndo, enabled = canUndo, modifier = Modifier.align(Alignment.CenterHorizontally)) { Text("Undo last") }
-    }
-}
-
-@Composable
-private fun HistoryScreen(state: UiState, onMessage: suspend (String) -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier.fillMaxSize()) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp), horizontalArrangement = Arrangement.End) {
-            HistoryExportButton(state, onMessage)
-        }
-        if (state.completions.isEmpty()) Box(Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
-            Text(if (state.storageUnavailable) "Saved history couldn't be opened. Try restarting the app." else "No movement snacks yet")
-        }
-        else LazyColumn(Modifier.fillMaxWidth().weight(1f), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            items(state.completions, key = { it.id }) { item ->
-                val ex = RoutineCatalog.resolve(item)
-                ListItem(
-                    headlineContent = { Text(ex?.name ?: item.exerciseId) },
-                    supportingContent = { Text(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(item.completedAt))) },
-                    trailingContent = { Text(RoutineCatalog.formatRecordedAmount(item.amount, ex)) }
-                )
-            }
-        }
     }
 }

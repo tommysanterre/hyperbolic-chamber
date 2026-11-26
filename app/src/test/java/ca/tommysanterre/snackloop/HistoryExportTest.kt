@@ -47,33 +47,28 @@ class HistoryExportTest {
     }
 
     @Test
-    fun `full log preserves historical names units versions and deterministic chronology`() {
+    fun `full log preserves deterministic chronology`() {
         val report = historyExport(listOf(
-            entry(4, "band_pull_aparts", 12).copy(routineVersion = 5),
-            entry(3, "ring_rows", 6).copy(routineVersion = 4),
-            entry(2, "pullups", 1).copy(routineVersion = 3),
-            entry(1, "pike_pushups", 0, now.minusDays(30)).copy(routineVersion = 2)
+            entry(3, "band_pull_aparts", 12),
+            entry(2, "scapular_pullups", 4),
+            entry(1, "dead_hang", 0, now.minusDays(30))
         ), now)
 
-        assertTrue(report.contains("| Ring rows | reps | 1 | 0 | 6.0 | 6–6 |"))
-        assertTrue(report.contains("| Chin-ups | reps | 1 | 0 | 1.0 | 1–1 |"))
-        assertTrue(report.contains("| Chin-ups | pullups | 1 | rep | Completed | 3 |"))
-        assertTrue(report.contains("| Pike push-ups | pike_pushups | 0 | reps | Skipped | 2 |"))
-        assertTrue(report.contains("| Ring rows | ring_rows | 6 | reps | Completed | 4 |"))
-        assertTrue(report.contains("| Band pull-aparts | band_pull_aparts | 12 | reps | Completed | 5 |"))
+        assertTrue(report.contains("| Dead hang | dead_hang | 0 | seconds | Skipped |"))
+        assertTrue(report.contains("| Scapular pull-ups | scapular_pullups | 4 | reps | Completed |"))
+        assertTrue(report.contains("| Band pull-aparts | band_pull_aparts | 12 | reps | Completed |"))
         val log = report.substringAfter("## Complete saved log")
         assertTrue(log.indexOf("| 1 |") < log.indexOf("| 2 |"))
         assertTrue(log.indexOf("| 2 |") < log.indexOf("| 3 |"))
-        assertTrue(log.indexOf("| 3 |") < log.indexOf("| 4 |"))
-        assertTrue(report.contains("Saved records: 4."))
+        assertTrue(report.contains("Saved records: 3."))
     }
 
     @Test
     fun `unknown movements remain exportable without breaking table rows`() {
-        val report = historyExport(listOf(entry(1, "unknown|movement\nname", 7).copy(routineVersion = 99)), now)
+        val report = historyExport(listOf(entry(1, "unknown|movement\nname", 7)), now)
 
         assertTrue(report.contains("unknown\\|movement name"))
-        assertTrue(report.contains("| 7 | units | Completed | 99 |"))
+        assertTrue(report.contains("| 7 | units | Completed |"))
         assertFalse(report.contains("unknown|movement\nname"))
     }
 
