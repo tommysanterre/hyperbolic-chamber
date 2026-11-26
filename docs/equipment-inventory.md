@@ -1,6 +1,6 @@
 # Equipment Inventory
 
-Reference inventory for adapting workouts and daily snack routines. Keep this file updated whenever equipment is acquired, sold/discarded, or setup preferences change.
+Reference inventory for adapting workouts and daily snack routines. Keep this file updated whenever equipment is acquired, sold/discarded, or setup preferences change. New equipment can always be recommended when there is a strong reason for a goal, progression gap, or pain-free adaptation (keep unowned suggestions separate from Owned gear).
 
 ## Training Context
 
