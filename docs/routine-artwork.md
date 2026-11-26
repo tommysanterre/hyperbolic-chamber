@@ -1,23 +1,21 @@
 # Routine artwork
 
-The active ten-movement routine uses only Saiyans. Adult Goku and Vegeta each demonstrate three movements; adult Gohan and Future Trunks each demonstrate two. Character totals differ by at most one, and no child characters are used. Every movement has a base-form PNG and a Super Saiyan PNG. Completing one full loop within a single workout day unlocks the transformed set.
+The active eight-movement routine (version 5) uses only adult Saiyans, with two movements each for Goku, Vegeta, Gohan, and Future Trunks. No child characters are used. Every movement has a base-form PNG and a Super Saiyan PNG. Completing one full loop within a single workout day unlocks the transformed set.
 
 ## Asset assignments
 
 | Character | Movement | Base artwork | Super Saiyan artwork |
 | --- | --- | --- | --- |
-| Goku | Knee push-ups | [movement_knee_pushups.png](../app/src/main/res/drawable-nodpi/movement_knee_pushups.png) | [movement_knee_pushups_ssj.png](../app/src/main/res/drawable-nodpi/movement_knee_pushups_ssj.png) |
-| Vegeta | Squats | [movement_squats.png](../app/src/main/res/drawable-nodpi/movement_squats.png) | [movement_squats_ssj.png](../app/src/main/res/drawable-nodpi/movement_squats_ssj.png) |
+| Trunks | Dead hang | [movement_dead_hang.png](../app/src/main/res/drawable-nodpi/movement_dead_hang.png) | [movement_dead_hang_ssj.png](../app/src/main/res/drawable-nodpi/movement_dead_hang_ssj.png) |
+| Goku | Deep squat hold | [movement_deep_squat.png](../app/src/main/res/drawable-nodpi/movement_deep_squat.png) | [movement_deep_squat_ssj.png](../app/src/main/res/drawable-nodpi/movement_deep_squat_ssj.png) |
+| Trunks | Band pull-aparts | [movement_band_pull_aparts.png](../app/src/main/res/drawable-nodpi/movement_band_pull_aparts.png) | [movement_band_pull_aparts_ssj.png](../app/src/main/res/drawable-nodpi/movement_band_pull_aparts_ssj.png) |
 | Gohan | Three-point bridge | [movement_three_point_bridge.png](../app/src/main/res/drawable-nodpi/movement_three_point_bridge.png) | [movement_three_point_bridge_ssj.png](../app/src/main/res/drawable-nodpi/movement_three_point_bridge_ssj.png) |
 | Gohan | Scapular pull-ups | [movement_scapular_pullups.png](../app/src/main/res/drawable-nodpi/movement_scapular_pullups.png) | [movement_scapular_pullups_ssj.png](../app/src/main/res/drawable-nodpi/movement_scapular_pullups_ssj.png) |
-| Goku | Supported single-leg Romanian deadlift | [movement_single_leg_rdl.png](../app/src/main/res/drawable-nodpi/movement_single_leg_rdl.png) | [movement_single_leg_rdl_ssj.png](../app/src/main/res/drawable-nodpi/movement_single_leg_rdl_ssj.png) |
-| Vegeta | Tuck L-sit | [movement_tuck_l_sit.png](../app/src/main/res/drawable-nodpi/movement_tuck_l_sit.png) | [movement_tuck_l_sit_ssj.png](../app/src/main/res/drawable-nodpi/movement_tuck_l_sit_ssj.png) |
-| Vegeta | Reverse lunges | [movement_reverse_lunges.png](../app/src/main/res/drawable-nodpi/movement_reverse_lunges.png) | [movement_reverse_lunges_ssj.png](../app/src/main/res/drawable-nodpi/movement_reverse_lunges_ssj.png) |
-| Trunks | Ring rows | [movement_ring_rows.png](../app/src/main/res/drawable-nodpi/movement_ring_rows.png) | [movement_ring_rows_ssj.png](../app/src/main/res/drawable-nodpi/movement_ring_rows_ssj.png) |
-| Trunks | Heel-dig bridges | [movement_heel_dig_bridges.png](../app/src/main/res/drawable-nodpi/movement_heel_dig_bridges.png) | [movement_heel_dig_bridges_ssj.png](../app/src/main/res/drawable-nodpi/movement_heel_dig_bridges_ssj.png) |
+| Vegeta | Hip-flexor stretch | [movement_hip_flexor.png](../app/src/main/res/drawable-nodpi/movement_hip_flexor.png) | [movement_hip_flexor_ssj.png](../app/src/main/res/drawable-nodpi/movement_hip_flexor_ssj.png) |
+| Vegeta | Squats | [movement_squats.png](../app/src/main/res/drawable-nodpi/movement_squats.png) | [movement_squats_ssj.png](../app/src/main/res/drawable-nodpi/movement_squats_ssj.png) |
 | Goku | Bear plank hold | [movement_bear_plank.png](../app/src/main/res/drawable-nodpi/movement_bear_plank.png) | [movement_bear_plank_ssj.png](../app/src/main/res/drawable-nodpi/movement_bear_plank_ssj.png) |
 
-All assets are saved under `app/src/main/res/drawable-nodpi/`. Routine 3 adds six illustrations for knee push-ups, heel-dig bridges and bear plank holds, edited with the **built-in imagegen tool**. Seven movements retain their existing pairs of illustrations. Older artwork remains available for retired movements. Start and end poses occupy the left and right panels of each opaque image. For the timed bear plank, END shows the position to hold. Character identity, exercise form, equipment contacts, panel cropping and transformation were visually reviewed before integration.
+All assets are saved under `app/src/main/res/drawable-nodpi/`. Routine 5 adds Future Trunks illustrations for band pull-aparts, upgrades hip-flexor stretch from Tien to adult Vegeta (base + Super Saiyan), and updates deep squat hold to adult Goku (base + Super Saiyan) to maintain an even 2-2-2-2 balance across the four adult Saiyans. Older artwork remains available for retired movements. Start and end poses occupy the left and right panels of each opaque image. For timed holds, END shows the position to hold. Character identity, exercise form, equipment contacts, panel cropping and transformation were visually reviewed before integration.
 
 The edit targets were the previous movement illustrations. Original adult Goku, Vegeta, Gohan and Future Trunks artwork supplied the character references. The supported deadlift and reverse lunge illustrations were subsequently edited in both forms to replace the child figures with adult Goku and Vegeta, respectively. Reference filenames below identify the inputs as they existed before this replacement.
 
@@ -171,6 +169,14 @@ Final framing correction (built-in imagegen edit, using the first adult Super Sa
 
 Use case: precise-object-edit. Fix ONLY framing in this paired Super Saiyan adult Vegeta reverse-lunge illustration. The LEFT figure's golden hair currently touches/crosses the TOP edge. Zoom BOTH figures out by 12 percent around their panel centers, leaving at least 70 pixels of WHITE SPACE ABOVE ALL HAIR in each panel and 70 pixels below boots. Entire hair tips must be visible, none touching any canvas edge. Preserve the exact adult Vegeta identity, mature face, muscular adult proportions, golden hair, teal eyes, subtle golden aura, blue bodysuit, white/gold chest armor, white gloves/boots, start standing pose and end reverse lunge pose, full feet and hand positions, clean anime linework and light floor shadows. Keep two equal side-by-side panels, divider exactly at midpoint, opaque white background, landscape 1536x1024. No text or watermark. Change only scale/framing; do not introduce different characters.
 
+## Routine 5 artwork
+
+Three paired base / Super Saiyan illustrations were added or updated for Routine 5 (`1536x1024` PNGs, equal 50% panel split):
+
+- `movement_band_pull_aparts.png` / `movement_band_pull_aparts_ssj.png` — Adult Future Trunks (referencing `movement_dead_hang.png` / `_ssj.png`) holding a thin red resistance band out front at chest height on the left and pulling it wide across his chest on the right.
+- `movement_hip_flexor.png` / `movement_hip_flexor_ssj.png` — Adult Vegeta (referencing `movement_squats.png` / `_ssj.png`), replacing Tien in the half-kneeling hip-flexor stretch pose so every active movement has a Super Saiyan transformation.
+- `movement_deep_squat.png` / `movement_deep_squat_ssj.png` — Adult Goku (referencing `movement_pushups.png` / `_ssj.png`), replacing Gohan in the standing-to-deep-squat hold pose to maintain an even 2-2-2-2 split across Goku, Vegeta, Gohan, and Future Trunks.
+
 ## Emulator layout verification
 
-The deadlift artwork has its panel separator at 11/24 of the image width in both forms. The renderer uses that actual boundary and omits the separator, preventing a sliver of the end pose from appearing in the start card. Other artwork splits at the midpoint. The previous artwork was checked in both character forms on the emulator. The adult replacements preserve those panel boundaries and are visually reviewed in both forms before installation.
+All eight active Routine 5 movements split evenly at the midpoint (`1/2`). Historical `single_leg_rdl` artwork retains its `11/24` panel separator in both forms. The renderer omits the separator so no sliver of the opposite panel appears in either card.
