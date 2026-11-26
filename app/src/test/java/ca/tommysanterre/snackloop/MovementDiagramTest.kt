@@ -8,10 +8,11 @@ import org.junit.Test
 
 class MovementDiagramTest {
     @Test
-    fun `one completed loop unlocks super saiyan even on a later day`() {
+    fun `one completed loop or strength session unlocks super saiyan even on a later day`() {
         assertFalse(UiState().superSaiyanUnlocked)
         assertTrue(UiState(rotationsToday = 1, completedRotations = 1).superSaiyanUnlocked)
         assertTrue(UiState(rotationsToday = 0, completedRotations = 1).superSaiyanUnlocked)
+        assertTrue(UiState(completedStrengthSessions = 1).superSaiyanUnlocked)
     }
 
     @Test

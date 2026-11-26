@@ -31,15 +31,20 @@ import kotlin.math.roundToInt
 
 @Composable
 fun MovementDiagram(exercise: Exercise, superSaiyan: Boolean) {
+    MovementDiagram(exercise.name, exercise.artwork, superSaiyan)
+}
+
+@Composable
+fun MovementDiagram(name: String, artwork: MovementArtwork, superSaiyan: Boolean) {
     val context = LocalContext.current
-    val artwork = exercise.artwork.drawable(superSaiyan)
-    val image = remember(artwork) {
-        BitmapFactory.decodeResource(context.resources, artwork).asImageBitmap()
+    val drawableRes = artwork.drawable(superSaiyan)
+    val image = remember(drawableRes) {
+        BitmapFactory.decodeResource(context.resources, drawableRes).asImageBitmap()
     }
-    val split = image.width / 2
+    val split = artwork.splitX(image.width)
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        PoseCard("START", exercise.name, image, 0, split, Modifier.weight(1f))
-        PoseCard("END", exercise.name, image, 1, split, Modifier.weight(1f))
+        PoseCard("START", name, image, 0, split, Modifier.weight(1f))
+        PoseCard("END", name, image, 1, split, Modifier.weight(1f))
     }
 }
 

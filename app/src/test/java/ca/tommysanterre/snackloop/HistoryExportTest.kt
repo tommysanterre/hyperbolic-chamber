@@ -86,6 +86,32 @@ class HistoryExportTest {
         assertTrue(report.contains("No saved movements yet."))
     }
 
+    @Test
+    fun `report includes completed strength sessions with progression hints and notes`() {
+        val started = now.minusMinutes(29).toInstant().toEpochMilli()
+        val finished = now.toInstant().toEpochMilli()
+        val session = StrengthSession(
+            id = 1,
+            templateId = StrengthCatalog.STRENGTH_A_ID,
+            startedAt = started,
+            finishedAt = finished,
+            note = "Shoulders felt solid, RIR 2"
+        )
+        val logs = listOf(
+            StrengthSetLog(id = 1, sessionId = 1, stepIndex = 1, exerciseId = "strength_incline_pushups", setNumber = 1, amount = 12, setting = "86 cm", completedAt = started + 60_000),
+            StrengthSetLog(id = 2, sessionId = 1, stepIndex = 3, exerciseId = "strength_incline_pushups", setNumber = 2, amount = 12, setting = "86 cm", completedAt = started + 180_000),
+            StrengthSetLog(id = 3, sessionId = 1, stepIndex = 5, exerciseId = "strength_incline_pushups", setNumber = 3, amount = 12, setting = "86 cm", completedAt = started + 300_000)
+        )
+
+        val report = historyExport(emptyList(), now, listOf(session), logs)
+
+        assertTrue(report.contains("Completed strength sessions (all time): 1."))
+        assertTrue(report.contains("## Strength sessions (oldest first)"))
+        assertTrue(report.contains("### 2026-11-26 — Strength A (~29 min)"))
+        assertTrue(report.contains("- Incline Push-ups @ 86 cm: 12, 12, 12 reps *(hit top of range — consider progressing to 79 cm)*"))
+        assertTrue(report.contains("- Notes: Shoulders felt solid, RIR 2"))
+    }
+
     private fun entry(id: Long, exerciseId: String, amount: Int, at: ZonedDateTime = now) = Completion(
         id = id,
         exerciseId = exerciseId,
