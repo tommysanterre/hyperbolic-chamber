@@ -1,8 +1,8 @@
 # Hyperbolic Time Chamber
 
-Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a continuous rotation of movement snacks, named after the Hyperbolic Time Chamber in Dragon Ball Z.
+Hyperbolic Time Chamber is a tiny offline-first Android app for moving through a continuous rotation of movement snacks and guided 30-minute strength workouts, named after the Hyperbolic Time Chamber in Dragon Ball Z.
 
-## Rotation
+## Daily Snacks (Rotation)
 
 1. Dead hang — 20–30 seconds
 2. Deep squat hold — 20–30 seconds
@@ -19,11 +19,21 @@ Spread 1–2 snacks at a time across the day—primarily on non-workout days—a
 
 A workout day runs from **4 AM to 4 AM in your local time**. The existing daily loop counter counts only after completing all eight exercises in order within that same workout day, returning the queue to the exercise where the loop started. For example, if your day starts at hip-flexor stretch, complete hip-flexor stretch and the following seven exercises to return to hip-flexor stretch and earn a loop. Partial progress toward this daily counter does not carry over at 4 AM; your position in the exercise queue does. Tap **0** to skip any movement, including timed holds. Skips are saved in history as **Skipped**, persist across restarts, and can be reversed with **Undo last**. A skip advances the queue but resets progress toward a completed loop; complete all eight exercises after it to earn the next loop.
 
-Updating to a new routine version resets the local database cleanly so the app only needs to maintain the active routine (`RoutineCatalog.VERSION`, currently 5).
+Updating to a new routine version resets the local database cleanly so the app only needs to maintain the active routine (`RoutineCatalog.VERSION`, currently 5). Database version 6 adds strength session tables via a non-destructive Room migration (`MIGRATION_5_6`) so existing snack history is preserved.
+
+## Strength (2 × 30 min/week)
+
+Switch to the **Strength** tab to run the owned-gear **Strength A** and **Strength B** sessions from [docs/training-plan.md](docs/training-plan.md):
+
+- **Alternating launcher:** Automatically recommends the next session (`Strength A` ↔ `Strength B`) based on your last finished session, while letting you choose either.
+- **Guided superset queue:** Starts with a 4-minute warm-up checklist, steps through all 18 working sets in antagonist superset order (`A1/A2 × 3`, `B1/B2 × 3`, `C1/C2 × 3`), and finishes with a 2-minute cooldown and optional session note.
+- **Zero-friction progression:** Remembers your last setup/progression chip per movement (bar height, band color, stance), shows your previous session sets, and flags when all 3 sets hit the top of the target range for double progression.
+- **Visual-only rest timer:** Automatically counts down `45s` after #1 in a pair and `60s` after #2 without sound, vibration, or blocking early recording.
+- **Super Saiyan transformation splash:** Completing a strength session triggers a full-screen animated Super Saiyan transformation splash (Goku for Strength A, Vegeta for Strength B) and unlocks Super Saiyan artwork across the entire app.
 
 ## Copy history for a difficulty review
 
-Tap **Copy history** in the top bar to copy a Markdown report directly to your clipboard so you can paste it into a chat. Copying works offline and includes the current routine, targets, available recording amounts and movement cues; a summary of the last 28 workout days; and the complete saved log with timestamps, amounts and skips. Recent averages exclude skips. Per-side amounts stay per side. Undone entries are absent because they were removed from history.
+Tap **Copy history** in the top bar to copy a Markdown report directly to your clipboard so you can paste it into a chat. Copying works offline and includes completed strength sessions (with sets, setup/progression, duration, notes, and double-progression readiness), the current snack routine, targets, available recording amounts and movement cues; a summary of the last 28 workout days; and the complete saved snack log with timestamps, amounts and skips. Recent averages exclude skips. Per-side amounts stay per side. Undone entries are absent because they were removed from history.
 
 When sharing the report to adjust difficulty, also describe how hard each exercise felt, roughly how many more clean reps or seconds you could have done, any assistance or setup changes, and any discomfort. The app does not record those details, and reaching a target or recording limit alone does not establish readiness to progress. Workout dates use the export device's current time zone and the app's 4 AM boundary. History remains in the app after copying.
 

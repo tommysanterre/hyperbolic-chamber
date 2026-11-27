@@ -6,11 +6,21 @@ enum class UnitType { REPS, SECONDS, REPS_PER_SIDE, SECONDS_PER_SIDE }
 
 data class MovementArtwork(
     @param:DrawableRes @get:DrawableRes val baseDrawable: Int,
-    @param:DrawableRes @get:DrawableRes val superSaiyanDrawable: Int = baseDrawable
+    @param:DrawableRes @get:DrawableRes val superSaiyanDrawable: Int = baseDrawable,
+    val splitNumerator: Int = 1,
+    val splitDenominator: Int = 2
 ) {
+    init {
+        require(splitNumerator in 1 until splitDenominator) {
+            "Split ratio must lie strictly between 0 and 1: $splitNumerator/$splitDenominator"
+        }
+    }
+
     @DrawableRes
     fun drawable(superSaiyan: Boolean): Int =
         if (superSaiyan) superSaiyanDrawable else baseDrawable
+
+    fun splitX(imageWidth: Int): Int = imageWidth * splitNumerator / splitDenominator
 }
 
 data class Exercise(

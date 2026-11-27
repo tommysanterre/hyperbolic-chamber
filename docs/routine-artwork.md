@@ -179,4 +179,23 @@ Three paired base / Super Saiyan illustrations were added or updated for Routine
 
 ## Emulator layout verification
 
-All eight active Routine 5 movements split evenly at the midpoint (`1/2`). Historical `single_leg_rdl` artwork retains its `11/24` panel separator in both forms. The renderer omits the separator so no sliver of the opposite panel appears in either card.
+All eight active Routine 5 movements split evenly at the midpoint (`1/2`). Restored `single_leg_rdl` artwork retains its `11/24` panel separator in both forms (`MovementArtwork.splitNumerator = 11`, `splitDenominator = 24`). The renderer omits the separator so no sliver of the opposite panel appears in either card.
+
+## Strength routine artwork
+
+Strength A and Strength B reuse exact-match base + Super Saiyan WebP pairs where available and restore four verified historical pairs from git (`movement_heel_dig_bridges`, `movement_single_leg_rdl`, `movement_reverse_lunges`, `movement_tuck_l_sit`):
+
+| Movement | Status | Character | Base / Super Saiyan WebP |
+| --- | --- | --- | --- |
+| Tempo Bodyweight Squat | Active (reused) | Vegeta | `movement_squats.webp` / `_ssj.webp` |
+| Heel-Dig Bridges | Active (restored) | Trunks | `movement_heel_dig_bridges.webp` / `_ssj.webp` |
+| Band Pull-Aparts | Active (reused) | Trunks | `movement_band_pull_aparts.webp` / `_ssj.webp` |
+| Supported Single-Leg RDL | Active (restored, `11/24` split) | Goku | `movement_single_leg_rdl.webp` / `_ssj.webp` |
+| Bodyweight Reverse Lunges | Active (restored) | Vegeta | `movement_reverse_lunges.webp` / `_ssj.webp` |
+| Tuck L-Sit | Active (restored) | Vegeta | `movement_tuck_l_sit.webp` / `_ssj.webp` |
+| Bear Plank Hold | Active (reused) | Goku | `movement_bear_plank.webp` / `_ssj.webp` |
+| Incline Push-ups | Pending image generation | Goku | `movement_incline_pushups.webp` / `_ssj.webp` |
+| Parallel Bar Inverted Rows | Pending image generation | Gohan | `movement_parallel_bar_rows.webp` / `_ssj.webp` |
+| Kneeling Ab Wheel Rollouts | Pending image generation | Gohan | `movement_ab_wheel_rollouts.webp` / `_ssj.webp` |
+| Bear Plank Shoulder Taps | Pending image generation | Trunks | `movement_bear_plank_shoulder_taps.webp` / `_ssj.webp` |
+| Band-Assisted Chin-ups | Pending image generation | Gohan | `movement_band_assisted_chinups.webp` / `_ssj.webp` |
