@@ -302,7 +302,7 @@ fun TransformationSplash(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = if (isTransformed) "SUPER SAIYAN!" else "POWERING UP...",
+                    text = if (isTransformed) "WORKOUT COMPLETE!" else "POWERING UP...",
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 2.sp
@@ -355,7 +355,7 @@ fun TransformationSplash(
                     modifier = Modifier.graphicsLayer { alpha = revealAlpha }
                 ) {
                     Text(
-                        text = "${celebration.templateName} Complete",
+                        text = celebration.templateName,
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                         color = Color.White,
                         textAlign = TextAlign.Center
