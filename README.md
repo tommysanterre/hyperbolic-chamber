@@ -48,7 +48,7 @@ The eight movements use four adult Saiyans, with two movements each:
 | Gohan | Three-point bridge; scapular pull-ups |
 | Trunks | Dead hang; band pull-aparts |
 
-Every movement has base-form and Super Saiyan artwork. Completing one full loop within a single workout day unlocks Super Saiyan artwork for all eight movements. All figures have adult proportions. The artwork assets, references and generation prompts are documented in [routine-artwork.md](docs/routine-artwork.md).
+Every movement has base-form and Super Saiyan artwork. Completing one full loop within a single workout day unlocks Super Saiyan artwork for all eight movements. All figures have adult proportions.
 
 ## Launcher icon
 
